@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-SHIELD="kyria"
+SHIELD="kyria_rev2"
 ARGS=""
 
 west build ${ARGS} -s ../app -d .build/left -b nice_nano_v2 -- -DSHIELD=${SHIELD}_left -DZMK_CONFIG=$(pwd)/config
