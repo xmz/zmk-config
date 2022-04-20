@@ -5,13 +5,18 @@
  */
 
 #include <behaviors.dtsi>
-#include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/outputs.h>
+#include "swedish-keymap.h"
 
+// None/Trans
+#define _____ &none
+#define t____ &trans
+
+// Layers
 #define DEFAULT 0
-#define CMD   1
-#define RAISE   2
+#define CMD 1
 
 / {
 	keymap {
@@ -24,22 +29,41 @@
 // | SHIFT |  Z  |  X  |  C   |  V   |  B   | L SHIFT | L SHIFT |  | L SHIFT | L SHIFT |  N   |  M    |  ,    |  .   |   /   | CTRL |
 //                     | GUI  | DEL  | RET  |  SPACE  |   ESC   |  |   RET   |  SPACE  | TAB  | BSPC  | R-ALT |
 			bindings = <
-	&kp ESC   &kp Q &kp W &kp E &kp R &kp T                                                &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSLH
-	&kp TAB   &kp A &kp S &kp D &kp F &kp G                                                &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
+	&kp ESC   &kp Q &kp W &kp E &kp R &kp T                                                &kp Y &kp U  &kp I     &kp O   &kp P    &kp SE_AO
+	&kp TAB   &kp A &kp S &kp D &kp F &kp G                                                &kp H &kp J  &kp K     &kp L   &kp SE_OE &kp SE_AE
 	&kp LSHFT &kp Z &kp X &kp C &kp V &kp B &kp LSHFT &kp LSHFT        &kp LSHFT &kp LSHFT &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RCTRL
 	                 &mo CMD &kp DEL &kp RET &kp SPACE &kp ESC        &kp RET  &kp SPACE  &kp TAB &kp BSPC &kp RALT
 			>;
 
-			sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
-		};
-
-		cmd_layer {
-
-			bindings = <
-	&reset 		&bt BT_CLR 	&bt BT_SEL 0	&bt BT_SEL 1	&bt BT_SEL 2	&bt BT_SEL 3										&out OUT_USB &out OUT_BLE	&trans	&trans	&trans	&reset
-	&bootloader	&trans		&trans			&trans			&trans			&trans												&trans		&trans			&trans	&trans	&trans	&bootloader
-	&none		&trans		&trans			&trans			&trans			&trans	&trans	&trans				&trans	&trans	&trans		&trans			&trans	&trans	&trans	&trans
+			sensor-bindings = <
+				&inc_dec_kp C_VOL_UP C_VOL_DN 
+				&inc_dec_kp PG_UP PG_DN
 			>;
 		};
+
+		
+		cmd_layer {
+			bindings = <
+			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
+			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
+			t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
+									t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
+			>;
+			sensor-bindings = <
+				&inc_dec_kp LG(LEFT) LG(RIGHT) 
+				&inc_dec_kp t____ t____
+			>;
+		};
+
+		empty_layer {
+			bindings = <
+			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
+			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
+			t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
+									t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
+			>;
+			sensor-bindings = <&inc_dec_kp LG(LEFT) LG(RIGHT) &inc_dec_kp t____ t____>;
+		};
+
 	};
 };
