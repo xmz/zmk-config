@@ -11,7 +11,7 @@
 #include "swedish-keymap.h"
 
 &left_encoder { resolution = <2>; };
-&right_encoder { resolution = <4>; };
+&right_encoder { resolution = <2>; };
 
 // None/Trans
 #define _____ &none
@@ -39,8 +39,8 @@
 			>;
 
 			sensor-bindings = <
-				&inc_dec_kp C_VOL_UP C_VOL_DN 
 				&inc_dec_kp PG_UP PG_DN
+				&inc_dec_kp C_VOL_DN C_VOL_UP 
 			>;
 		};
 
