@@ -19,7 +19,8 @@
 
 // Layers
 #define DEFAULT 0
-#define CMD 1
+#define SYM 1
+#define CMD 2
 
 / {
 	keymap {
@@ -32,10 +33,10 @@
 // | SHIFT |  Z  |  X  |  C   |  V   |  B   | L SHIFT | L SHIFT |  | L SHIFT | L SHIFT |  N   |  M    |  ,    |  .   |   /   | CTRL |
 //                     | GUI  | DEL  | RET  |  SPACE  |   ESC   |  |   RET   |  SPACE  | TAB  | BSPC  | R-ALT |
 			bindings = <
-	&kp ESC   &kp Q &kp W &kp E &kp R &kp T                                                &kp Y &kp U  &kp I     &kp O   &kp P    &kp SE_AO
+	&lt CMD ESC   &kp Q &kp W &kp E &kp R &kp T                                                &kp Y &kp U  &kp I     &kp O   &kp P    &kp SE_AO
 	&kp TAB   &kp A &kp S &kp D &kp F &kp G                                                &kp H &kp J  &kp K     &kp L   &kp SE_OE &kp SE_AE
-	&kp LSHFT &kp Z &kp X &kp C &kp V &kp B &kp LSHFT &kp LSHFT        &kp LSHFT &kp LSHFT &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RCTRL
-	                 &mo CMD &kp DEL &kp RET &kp SPACE &kp ESC        &kp RET  &kp SPACE  &kp TAB &kp BSPC &kp RALT
+	&mo SYM   &kp Z &kp X &kp C &kp V &kp B &kp LSHFT &kp LSHFT        &kp LSHFT &kp LSHFT &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RCTRL
+	                 &mo SYM &kp DEL &kp RET &kp SPACE &kp ESC        &kp RET  &kp SPACE  &kp TAB &kp BSPC &kp RALT
 			>;
 
 			sensor-bindings = <
@@ -45,11 +46,24 @@
 		};
 
 		
-		cmd_layer {
+		sym_layer {
 			bindings = <
-			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
+			&kp SE_LCBR   t____   &bt BT_NXT   &bt BT_CLR   t____   t____                                   t____   t____   t____   t____   t____   t____
 			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
 			t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
+									t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
+			>;
+			sensor-bindings = <
+				&inc_dec_kp LG(LEFT) LG(RIGHT) 
+				&inc_dec_kp t____ t____
+			>;
+		};
+
+		cmd_layer {
+			bindings = <
+			t____   t____   &kp SE_LBRC   &kp SE_RBRC   t____   t____                                   t____   t____   t____   t____   t____   t____
+			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
+			&out OUT_TOG t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
 									t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
 			>;
 			sensor-bindings = <
