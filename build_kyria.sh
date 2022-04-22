@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 SHIELD="kyria_rev2"
-ARGS="-p"
+ARGS=""
 
 if [ -f config/${SHIELD}_left.conf ]
 then

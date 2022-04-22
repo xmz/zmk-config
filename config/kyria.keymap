@@ -20,7 +20,8 @@
 // Layers
 #define DEFAULT 0
 #define SYM 1
-#define CMD 2
+#define FN 2
+#define CMD 3
 
 / {
 	keymap {
@@ -33,10 +34,10 @@
 // | SHIFT |  Z  |  X  |  C   |  V   |  B   | L SHIFT | L SHIFT |  | L SHIFT | L SHIFT |  N   |  M    |  ,    |  .   |   /   | CTRL |
 //                     | GUI  | DEL  | RET  |  SPACE  |   ESC   |  |   RET   |  SPACE  | TAB  | BSPC  | R-ALT |
 			bindings = <
-	&lt CMD ESC   &kp Q &kp W &kp E &kp R &kp T                                                &kp Y &kp U  &kp I     &kp O   &kp P    &kp SE_AO
-	&kp TAB   &kp A &kp S &kp D &kp F &kp G                                                &kp H &kp J  &kp K     &kp L   &kp SE_OE &kp SE_AE
-	&kp LCTRL &kp Z &kp X &kp C &kp V &kp B &kp LSHFT &kp LSHFT        &kp LSHFT &kp LSHFT &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RCTRL
-	                 &mo SYM &kp DEL &kp RET &kp SPACE &kp BSPC        &kp RET  &kp SPACE  &kp TAB &kp BSPC &kp RALT
+&lt CMD ESC &kp Q		&kp W		&kp E		&kp R		&kp TAB																&kp Y		&kp U		&kp I		&kp O		&kp P		&kp C_MUTE
+&kp TAB		&kp A		&kp S		&kp D		&kp F		&kp G																&kp H		&kp J		&kp K		&kp L		&kp SE_OE	&kp SE_AE
+&kp LCTRL	&kp Z		&kp X		&kp C		&kp V		&kp B		_____		&kp LSHFT           _____		_____		&kp N		&kp M		&kp COMMA	&kp DOT		&kp SE_MINS &kp RCTRL
+									&mo SYM		&kp LALT	&kp RET		&kp SPACE	&kp BSPC			&kp RET		&kp SPACE	&kp DEL		&kp BSPC	&kp RALT
 			>;
 
 			sensor-bindings = <
@@ -48,11 +49,24 @@
 		
 		sym_layer {
 			bindings = <
-			&kp SE_LCBR &kp NUMBER_1 &kp SE_2 &kp SE_3 &kp SE_4 &kp SE_5                                   t____   t____   t____   t____   t____   t____
-			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
-			t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
-									t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
+&kp N1  	&kp N2  	&kp N3  	&kp N4  	&kp N5  	&kp N6																&kp N7  	&kp N8  	&kp N9  	&kp N0  	&kp SE_PLUS t____
+t____		t____		t____		t____		t____		t____																t____		t____		&kp UP		t____		t____		t____
+t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		&kp LEFT	&kp DOWN	&kp RIGHT	t____		t____
+									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
+				>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp LG(LEFT) LG(RIGHT) 
 			>;
+		};
+
+		fn_layer {
+			bindings = <
+&kp F1  	&kp F2  	&kp F3  	&kp F4  	&kp F5  	&kp F6																&kp F7  	&kp F8  	&kp F9  	&kp F10  	&kp F11 	&kp F12
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t____		t____		t____		t____		t____
+									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
+				>;
 			sensor-bindings = <
 				&inc_dec_kp t____ t____
 				&inc_dec_kp LG(LEFT) LG(RIGHT) 
@@ -61,10 +75,10 @@
 
 		cmd_layer {
 			bindings = <
-			t____   &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4                                   t____   t____   t____   t____   t____   t____
-			&bt BT_CLR   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
-			&out OUT_TOG t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
-									t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
+t____	  	&bt BT_SEL 0&bt BT_SEL 1&bt BT_SEL 2&bt BT_SEL 3&bt BT_SEL 4														&kp N7  	&kp N8  	&kp N9  	&kp N0  	&kp SE_PLUS t____
+&bt BT_CLR	t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+&out OUT_TOG t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t____		t____		t____		t____		t____
+									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
 			>;
 			sensor-bindings = <
 				&inc_dec_kp t____ t____
@@ -74,12 +88,15 @@
 
 		empty_layer {
 			bindings = <
-			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
-			t____   t____   t____   t____   t____   t____                                   t____   t____   t____   t____   t____   t____
-			t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
-									t____   t____   t____   t____   t____   t____   t____   t____   t____   t____
+t____	  	t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t____		t____		t____		t____		t____
+									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
 			>;
-			sensor-bindings = <&inc_dec_kp LG(LEFT) LG(RIGHT) &inc_dec_kp t____ t____>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp t____ t____
+			>;
 		};
 
 	};
