@@ -95,7 +95,7 @@
  */
 // Row 1
 #define SE_HALF LS(SE_SECT) // ½
-#define SE_EXLM LS(SE_1)    // !
+#define SE_EXLM LS(N1)      // !
 #define SE_DQUO LS(SE_2)    // "
 #define SE_HASH LS(SE_3)    // #
 #define SE_CURR LS(SE_4)    // ¤
