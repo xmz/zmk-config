@@ -111,7 +111,7 @@ t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t
 			bindings = <
 &kp TAB		&kp SE_DQUO	&kp SE_SLSH	&kp SE_BSLS	&kp SE_LPRN	&kp SE_RPRN															&kp PG_UP	&kp HOME	&kp UP		&kp END		&kp	INS		&kp C_PLAY_PAUSE
 &kp LSHIFT	&kp SE_QUOT	&kp SE_AT	t____		&kp SE_LCBR	&kp SE_RCBR															&kp PG_DN	&kp LEFT	&kp DOWN	&kp RIGHT	&kp SE_ASTR &kp SE_AO
-&kp LCTRL	&kp SE_PIPE	&kp SE_LABK	&kp SE_RABK	&kp SE_LBRC	&kp SE_RBRC	t____		t____				t____		t____		&kp SE_EQL	&kp SE_AMPR	&kp SE_QUES	&kp SE_EXLM	t____		t____
+&kp LCTRL	&kp SE_PIPE	&kp SE_LABK	&kp SE_RABK	&kp SE_LBRC	&kp SE_RBRC	&kp LC(LA(HOME)) t____			t____		t____		&kp SE_EQL	&kp SE_AMPR	&kp SE_QUES	&kp SE_EXLM	t____		t____
 									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
 				>;
 			sensor-bindings = <
