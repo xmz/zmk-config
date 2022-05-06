@@ -108,7 +108,7 @@
 #define SE_QUES LS(SE_PLUS) // ?
 #define SE_GRV  LS(SE_ACUT) // ` (dead)
 // Row 2
-#define SE_CIRC LS(SE_DIAE) // ^ (dead)
+#define SE_HAT LS(SE_DIAE) // ^ (dead)
 // Row 3
 #define SE_ASTR LS(SE_QUOT) // *
 // Row 4
