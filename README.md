@@ -24,7 +24,7 @@ git rebase origin/main
 |  ESC  |   Q   |   W   |   E   |   R   |   T   |                                        |   Y   |   U   |   I   |   O   |   P   |  MUTE |
 |TAB/LSH|   A   |   S   |   D   |   F   |   G   |                                        |   H   |   J   |   K   |   L   |   Ö   |  Ä/Å  |
 |CTRL/< |   Z   |   X   |   C   |   V   |   B   | SHIFT | SYM/  |        |  RET  | SHIFT/|   N   |   M   |   ,   |   .   |   -   |  CTRL |
-                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  ALT  |
+                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  MENU |
 ```
 
 ## Game
@@ -42,7 +42,7 @@ git rebase origin/main
 |  TAB  |   \   |   /   |   "   |   (   |   )   |                                        | PG_UP | HOME  |   UP  |  END  |  INS  |  PLAY |
 | SHIFT |   @   |   `   |   '   |   {   |   }   |                                        | PG_DN | LEFT  |  DOWN | RIGHT |   *   |   ~   |
 |  CTRL |   |   |   <   |   >   |   [   |   ]   | SHIFT | SYM/  |        |  RET  | SHIFT/|   =   |   &   |   ?   |   !   |   +   |   ^   |
-                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  ALT  |
+                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  MENU |
 ```
 
 ## Numbers/FN
@@ -51,7 +51,7 @@ git rebase origin/main
 |   1   |   2   |   3   |   4   |   5   |   6   |                                        |   7   |   8   |   9   |   0   |   +   |  MUTE |
 |  F1   |  F2   |  F3   |  F4   |  F5   |  F6   |                                        |  F7   |  F8   |  F9   |  F10  |  F11  |  F12  |
 |  CTRL |       |       |       |       |       | SHIFT | SYM/  |        |  RET  | SHIFT/|       |       |       |       |       |  CTRL |
-                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  ALT  |
+                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  MENU |
 ```
 
 ## Command
