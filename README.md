@@ -51,7 +51,7 @@ git rebase origin/main
 |   1   |   2   |   3   |   4   |   5   |   6   |                                        |   7   |   8   |   9   |   0   |   +   |  MUTE |
 |  F1   |  F2   |  F3   |  F4   |  F5   |  F6   |                                        |  F7   |  F8   |  F9   |  F10  |  F11  |  F12  |
 |  CTRL |       |       |       |       |       | SHIFT | SYM/  |        |  RET  | SHIFT/|       |       |       |       |       |  CTRL |
-                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  MENU |
+                        |  SYM  | R-ALT |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  MENU |
 ```
 
 ## Command
@@ -60,5 +60,5 @@ git rebase origin/main
 |  XXX  |  BT 1 |  BT 2 | BT 3  | BT 4  | BT 5  |                                        |  STD  | SVORAK| COLEM | WORKM |       |       |
 | BT CLR|       |       |       |       |       |                                        |  GAME |       |       |       |       |       |
 |  USB  |       |       |       |       |       |EXT PWR|       |        |       |       |       |       |       |       |       |       |
-                        |       |       |       |  TOG  |       |        |       |       |       |       |       |
+                        | bootl |       |       |  TOG  |       |        |       |       |       |       | bootl |
 ```
