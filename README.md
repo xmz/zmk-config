@@ -22,19 +22,27 @@ git rebase origin/main
 
 ```
 |  ESC  |   Q   |   W   |   E   |   R   |   T   |                                        |   Y   |   U   |   I   |   O   |   P   |  MUTE |
-|  TAB  |   A   |   S   |   D   |   F   |   G   |                                        |   H   |   J   |   K   |   L   |   Ö   |   Ä   |
-|  CTRL |   Z   |   X   |   C   |   V   |   B   | SYM/  | SHIFT |        | SHIFT/|  RET  |   N   |   M   |   ,   |   .   |   -   |  CTRL |
-                        |  SYM  |  ALT  |  NUM  | SPACE | BSPC  |        | SPACE |  RET  |  DEL  |  WIN  |  ALT  |
+|TAB/LSH|   A   |   S   |   D   |   F   |   G   |                                        |   H   |   J   |   K   |   L   |   Ö   |  Ä/Å  |
+|CTRL/< |   Z   |   X   |   C   |   V   |   B   | SHIFT | SYM/  |        |  RET  | SHIFT/|   N   |   M   |   ,   |   .   |   -   |  CTRL |
+                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  ALT  |
+```
+
+## Game
+
+```
+|  ESC  |   T   |   Q   |   C   |   E   |   R   |                                        |       |       |   UP  |       |       |       |
+| LSHIFT|   G   |   A   |   W   |   D   |   F   |                                        |       | RIGHT |  DOWN |  LEFT |       |       |
+|  CTRL |   Z   |   X   |   S   |   V   |   B   |       |  RET  |        |  RET  |       |       |       |       |       |       |       |
+                        |       |       | SPACE | SPACE |  RET  |        |  RET  |       |       |       |       |
 ```
 
 ## Symbols
 
 ```
-|  ESC  |   "   |   /   |   \   |   (   |   )   |                                        | PG_UP | HOME  |   UP  |  END  |  INS  |  PLAY |
-|  TAB  |   '   |   @   |   |   |   {   |   }   |                                        | PG_DN | LEFT  |  DOWN | RIGHT |   *   |   Å   |
-|  CTRL |       |   <   |   >   |   [   |   ]   | SYM/  | SHIFT |        | SHIFT/|  RET  |   =   |   &   |   ?   |   !   |       |  CTRL |
-                        |  SYM  |  ALT  |  NUM  | SPACE | BSPC  |        | SPACE |  RET  |  DEL  |  WIN  | R-ALT |
-
+|  TAB  |   \   |   /   |   "   |   (   |   )   |                                        | PG_UP | HOME  |   UP  |  END  |  INS  |  PLAY |
+| SHIFT |   @   |   `   |   '   |   {   |   }   |                                        | PG_DN | LEFT  |  DOWN | RIGHT |   *   |   ~   |
+|  CTRL |   |   |   <   |   >   |   [   |   ]   | SHIFT | SYM/  |        |  RET  | SHIFT/|   =   |   &   |   ?   |   !   |   +   |   ^   |
+                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  ALT  |
 ```
 
 ## Numbers/FN
@@ -42,15 +50,15 @@ git rebase origin/main
 ```
 |   1   |   2   |   3   |   4   |   5   |   6   |                                        |   7   |   8   |   9   |   0   |   +   |  MUTE |
 |  F1   |  F2   |  F3   |  F4   |  F5   |  F6   |                                        |  F7   |  F8   |  F9   |  F10  |  F11  |  F12  |
-|  CTRL |       |       |       |       |       | SYM/  | SHIFT |        | SHIFT/|  RET  |       |       |       |       |       |  CTRL |
-                        |  SYM  |  ALT  |  NUM  | SPACE | BSPC  |        | SPACE |  RET  |  DEL  |  WIN  | R-ALT |
+|  CTRL |       |       |       |       |       | SHIFT | SYM/  |        |  RET  | SHIFT/|       |       |       |       |       |  CTRL |
+                        |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  ALT  |
 ```
 
 ## Command
 
 ```
-|  XXX  |  BT 1 |  BT 2 | BT 3  | BT 4  | BT 5  |                                        |       |       |       |       |       |       |
-| BT CLR|       |       |       |       |       |                                        |       |       |       |       |       |       |
+|  XXX  |  BT 1 |  BT 2 | BT 3  | BT 4  | BT 5  |                                        |  STD  | SVORAK| COLEM | WORKM |       |       |
+| BT CLR|       |       |       |       |       |                                        |  GAME |       |       |       |       |       |
 |  USB  |       |       |       |       |       |EXT PWR|       |        |       |       |       |       |       |       |       |       |
                         |       |       |       |  TOG  |       |        |       |       |       |       |       |
 ```
