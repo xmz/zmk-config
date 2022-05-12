@@ -148,15 +148,15 @@ t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t
 
 		game_layer {
 // ------------------------------------------------------------------------------------------------------------------------------------------
-// |  ESC  |   T   |   Q   |   C   |   E   |   R   |                                        |       |       |       |       |       |       |
-// |TAB/LSH|   G   |   A   |   W   |   D   |   F   |                                        |       |       |       |       |       |       |
-// |CTRL/< |   Z   |   X   |   S   |   V   |   B   |       |  RET  |        |       |       |       |       |       |       |       |       |
-//                         |       |       | SPACE |       |  RET  |        |       |       |       |       |       |
+// |  ESC  |   T   |   Q   |   C   |   E   |   R   |                                        |       |       |   UP  |       |       |       |
+// | LSHIFT|   G   |   A   |   W   |   D   |   F   |                                        |       | RIGHT |  DOWN |  LEFT |       |       |
+// |  CTRL |   Z   |   X   |   S   |   V   |   B   |       |  RET  |        |  RET  |       |       |       |       |       |       |       |
+//                         |       |       | SPACE | SPACE |  RET  |        |  RET  |       |       |       |       |
 			bindings = <
-&kp ESC	  	&kp T		&kp Q		&kp W		&kp E		&kp R																_____		_____		_____		_____		_____		_____
-&kp LSHFT	&kp G		&kp A		&kp S		&kp D		&kp F																_____		_____		_____		_____		_____		_____
-&kp LCTRL	&kp Z		&kp X		&kp C		&kp V		&kp B		_____		&kp RET				_____		_____		_____		_____		_____		_____		_____		_____
-									_____		_____		&kp SPACE	_____		&kp RET				&to 0		_____		_____		_____		_____
+&kp ESC	  	&kp T		&kp Q		&kp W		&kp E		&kp R																_____		_____		&kp UP		_____		_____		&to 0
+&kp LSHFT	&kp G		&kp A		&kp S		&kp D		&kp F																_____		&kp LEFT	&kp DOWN	&kp RIGHT	_____		_____
+&kp LCTRL	&kp Z		&kp X		&kp C		&kp V		&kp B		_____		&kp RET				&kp RET		_____		_____		_____		_____		_____		_____		_____
+									_____		_____		&kp SPACE	&kp SPACE	&kp RET				&kp RET		_____		_____		_____		_____
 			>;
 			sensor-bindings = <
 				&inc_dec_kp t____ t____
