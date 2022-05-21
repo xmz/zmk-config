@@ -161,9 +161,9 @@ t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t
 // |  CTRL |   Z   |   X   |   S   |   V   |   B   |       | SPACE |        |  RET  |       |       |       |       |       |       |  BACK |
 //                         |       |  RET  |  NUM  |  TAB  | SPACE |        |  RET  |       |       |       |       |
 			bindings = <
-&kp ESC		&kp T		&kp Q		&kp W		&kp E		&kp R																_____		_____		&kp UP		_____		_____		&kp C_MUTE
-&kp LSHFT	&kp G		&kp A		&kp S		&kp D		&kp F																_____		&kp LEFT	&kp DOWN	&kp RIGHT	_____		_____
-&kp LCTRL	&kp Z		&kp X		&kp C		&kp V		&kp B		_____		&kp SPACE			&kp RET		_____		_____		_____		_____		_____		_____		&to 0
+&kp ESC		&kp T		&kp Q		&kp C		&kp E		&kp R																_____		_____		&kp UP		_____		_____		&kp C_MUTE
+&kp LSHFT	&kp G		&kp A		&kp W		&kp D		&kp F																_____		&kp LEFT	&kp DOWN	&kp RIGHT	_____		_____
+&kp LCTRL	&kp Z		&kp X		&kp S		&kp V		&kp B		_____		&kp SPACE			&kp RET		_____		_____		_____		_____		_____		_____		&to 0
 									_____		&kp RET		&mo NUM		&kp TAB		&kp SPACE			&kp RET		_____		_____		_____		_____
 			>;
 			sensor-bindings = <
