@@ -85,6 +85,15 @@
 			tapping-term-ms = <125>;
 			bindings = <&mo>, <&kp>;
 		};
+
+		// Swapper for smart alt+tab
+        swapper: swapper {
+            compatible = "zmk,behavior-tri-state";
+            label = "SWAPPER";
+            #binding-cells = <0>;
+            bindings = <&kt LALT>, <&kp TAB>, <&kt LALT>;
+            ignored-key-positions = <12 24>;
+        };
 	};
 
 	keymap {
@@ -144,8 +153,8 @@ t____			t____	 		t____	 		t____		   	t____   		t____				t____				t____				&rgb_u
 //                     |      |      |      |        |  |       |      |       |       |
 			bindings = <
 &kp F1			&kp F2			&kp F3			&kp F4			&kp F5			&kp F6														&kp F7			&kp F8			&kp F9			&kp F10			&kp F11			&kp F12
-t____			t____	 		t____	 		t____		   	t____   		t____														&kp PG_UP		&kp HOME		&kp UP			&kp END			&kp SE_QUOT		&tilde_out
-t____			t____	 		t____	 		t____		   	t____   		t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		&kp SE_AE
+&swapper		t____	 		t____	 		t____		   	t____   		t____														&kp PG_UP		&kp HOME		&kp UP			&kp END			&kp SE_QUOT		&tilde_out
+&kp LS(TAB)		t____	 		t____	 		t____		   	t____   		t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		&kp SE_AE
 t____			t____	 		t____	 		t____		   	t____   		t____				t____				t____				t____			t____	 		t____	 		t____		   	t____   		t____
 												t____			t____			t____ 				t____				t____				t____			t____	 		t____
 			>;
