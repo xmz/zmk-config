@@ -16,7 +16,7 @@
 &right_encoder { resolution = <2>; };
 
 // Use all leds
-&spi1 { led_strip: ws2812@0 { chain-length = <34>; }; };
+&spi3 { led_strip: ws2812@0 { chain-length = <34>; }; };
 
 // None/Trans
 #define _____ &none
@@ -172,7 +172,7 @@ t____			&kp SE_PIPE		t____	 		t____		   	t____   		t____				t____				&kp C_PLAY_
 // |   F7  |  F8 |  F9 |  F10 |  F11 |  F12 |        |  |       |  +   |   -   |   =   |  [   |   ]   |   \   |
 //                     |      |      |      |        |  |       |      |       |       |
 			bindings = <
-&reset			&bt BT_SEL 0	&bt BT_SEL 1	&bt BT_SEL 2	&bt BT_SEL 3	&bt BT_SEL 4												&out OUT_TOG 	t____	 		t____			&ext_power EP_OFF &ext_power EP_ON &reset
+&sys_reset		&bt BT_SEL 0	&bt BT_SEL 1	&bt BT_SEL 2	&bt BT_SEL 3	&bt BT_SEL 4												&out OUT_TOG 	t____	 		t____			&ext_power EP_OFF &ext_power EP_ON &sys_reset
 &bt BT_CLR		t____	 		t____	 		t____		   	t____   		t____														t____			t____	 		t____	 		t____		   	t____   		t____
 t____			t____	 		t____	 		t____		   	t____   		t____														t____			t____	 		t____	 		t____		   	t____   		t____
 t____			t____	 		t____	 		t____		   	t____   		t____				t____				t____				&rgb_ug RGB_TOG	&rgb_ug RGB_HUI &rgb_ug RGB_HUD	&rgb_ug RGB_SAI &rgb_ug RGB_SAD &rgb_ug RGB_COLOR_HSB(0, 0, 2)
