@@ -6,8 +6,8 @@
 
 #define DT_DRV_COMPAT zmk_behavior_tri_state
 
-#include <drivers/behavior.h>
 #include <zephyr/device.h>
+#include <drivers/behavior.h>
 #include <zephyr/logging/log.h>
 #include <zmk/behavior.h>
 #include <zmk/behavior_queue.h>
@@ -65,10 +65,8 @@ static void reset_timer(int32_t timestamp, struct active_tri_state *tri_state) {
 }
 
 void trigger_end_behavior(struct active_tri_state *si) {
-#ifdef CONFIG_ZMK_SPLIT_ROLE_CENTRAL
     zmk_behavior_queue_add(si->position, si->config->end_behavior, true, si->config->tap_ms);
     zmk_behavior_queue_add(si->position, si->config->end_behavior, false, 0);
-#endif
 }
 
 void behavior_tri_state_timer_handler(struct k_work *item) {
@@ -191,7 +189,6 @@ static const struct behavior_driver_api behavior_tri_state_driver_api = {
     .binding_released = on_tri_state_binding_released,
 };
 
-#ifdef CONFIG_ZMK_SPLIT_ROLE_CENTRAL
 static int tri_state_listener(const zmk_event_t *eh);
 static int tri_state_position_state_changed_listener(const zmk_event_t *eh);
 static int tri_state_layer_state_changed_listener(const zmk_event_t *eh);
@@ -274,7 +271,6 @@ static int tri_state_layer_state_changed_listener(const zmk_event_t *eh) {
     }
     return ZMK_EV_EVENT_BUBBLE;
 }
-#endif
 
 #define _TRANSFORM_ENTRY(idx, node)                                                                \
     {                                                                                              \

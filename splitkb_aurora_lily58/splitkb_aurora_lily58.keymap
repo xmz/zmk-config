@@ -12,8 +12,14 @@
 #include <dt-bindings/zmk/rgb.h>
 #include "../swedish-keymap.h"
 
-&left_encoder { resolution = <2>; };
-&right_encoder { resolution = <2>; };
+&left_encoder {
+	/delete-property/ resolution;
+	steps = <36>;
+};
+&right_encoder {
+	/delete-property/ resolution;
+	steps = <36>;
+};
 
 // Use all leds
 &spi3 { led_strip: ws2812@0 { chain-length = <34>; }; };
@@ -30,6 +36,12 @@
 #define ANDROID 4
 
 / {
+
+	sensors {
+		compatible = "zmk,keymap-sensors";
+		sensors = <&left_encoder &right_encoder>;
+		triggers-per-rotation = <18>;
+	};
 
 	macros {
 		 c_a_h: c_a_h {
@@ -87,13 +99,27 @@
 		};
 
 		// Swapper for smart alt+tab
-        swapper: swapper {
-            compatible = "zmk,behavior-tri-state";
-            label = "SWAPPER";
-            #binding-cells = <0>;
-            bindings = <&kt LALT>, <&kp TAB>, <&kt LALT>;
-            ignored-key-positions = <12 24>;
-        };
+		swapper: swapper {
+			compatible = "zmk,behavior-tri-state";
+			label = "SWAPPER";
+			#binding-cells = <0>;
+			bindings = <&kt LALT>, <&kp TAB>, <&kt LALT>;
+			ignored-key-positions = <12 24>;
+		};
+
+		rot_kp: behavior_sensor_rotate_kp {
+			compatible = "zmk,behavior-sensor-rotate-var";
+			label = "ENC_KP";
+			#sensor-binding-cells = <2>;
+			bindings = <&kp>, <&kp>;
+		};
+
+		vol_encoder: vol_encoder {
+			compatible = "zmk,behavior-sensor-rotate";
+			label = "VOL_ENCODER";
+			#sensor-binding-cells = <0>;
+			bindings = <&kp C_VOL_DN>, <&kp C_VOL_UP>;
+		};
 	};
 
 	keymap {
@@ -105,18 +131,18 @@
 // |  ESC  |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |   +   |
 // |  TAB  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   |   Å   |
 // | SHIFT |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   Ö   |   Ä   |
-// |  CTRL |  Z  |  X  |  C   |  V   |  B   |   "["  |  |  "]"  |  N   |  M    |  ,    |  .   |   -   | SHIFT |
-//                     | ALT  | GUI  | LOWER|  SPACE |  | ENTER | RAISE| BSPC  | GUI   |
+// |  CTRL |  Z  |  X  |  C   |  V   |  B   |   MUTE |  | MUTE  |  N   |  M    |  ,    |  .   |   -   | SHIFT |
+//                     | ALT  | GUI  | BSPC |  SPACE |  | ENTER | DEL  | BSPC  | RALT  |
 			bindings = <
 &kp ESC			&kp N1	 		&kp N2			&kp N3			&kp N4			&kp N5														&kp N6			&kp N7			&kp N8			&kp N9			&kp N0			&kp SE_PLUS
 &kp TAB			&kp Q			&kp W			&kp E			&kp R			&kp T														&kp Y			&kp U			&kp I			&kp O			&kp P			&kp SE_AO
 &kp LSHFT		&kp A			&kp S			&kp D			&kp F			&kp G														&kp H			&kp J			&kp K			&kp L			&kp SE_OE		&kp SE_AE
 &kp LCTRL		&kp Z			&kp X			&kp C			&kp V			&kp B				&kp C_MUTE			&kp C_MUTE			&kp N			&kp M			&kp COMMA		&kp DOT			&kp SE_MINS 	&kp RSHFT
-												&kp LALT		&kp LGUI		&kp BSPC			&qlt SYM SPACE		&qlt CMD RET		&kp BSPC		&kp DEL			&kp RALT
+												&kp LALT		&kp LGUI		&kp BSPC			&qlt SYM SPACE		&qlt CMD RET		&kp DEL			&kp DEL			&kp RALT
 			>;
 
 			sensor-bindings = <
-				&inc_dec_kp PG_UP PG_DN
+				&inc_dec_kp C_VOL_DN C_VOL_UP
 				&inc_dec_kp LC(LEFT) LC(RIGHT)
 			>;
 		};
@@ -130,10 +156,10 @@
 // |   F7  |  F8 |  F9 |  F10 |  F11 |  F12 |        |  |       |  +   |   -   |   =   |  [   |   ]   |   \   |
 //                     |      |      |      |        |  |       |      |       |       |
 			bindings = <
-&kp F1			&kp F2			&kp F3			&kp F4			&kp F5			&kp F6														&grv_out		&kp F8			&kp F9			&kp F10			&kp F11			&kp F12
+&kp LA(F4)		t____			&kp SE_AT		&kp LS(N3)		&kp SE_DLR		&kp F5														&kp F7			&kp F8			&kp F9			&kp F10			&kp F11			&kp SE_BSLS
 &swapper		t____	 		t____			t____			t____			t____														&kp PG_UP		&kp HOME		&kp UP			&kp END			&kp SE_QUOT		&tilde_out
-&kp LSHFT		t____	 		t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		&kp SE_AE
-t____			&kp SE_LABK		t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	t____			t____			t____	 		t____			t____			t____
+&kp LSHFT		t____	 		t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		&grv_out
+t____			&kp SE_LABK		t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	t____			&kp SE_PIPE		&kp SE_LABK		&kp LS(SE_LABK)	t____			t____
 												t____			t____			t____ 				t____				&sl FN				t____			t____	 		t____
 			>;
 			sensor-bindings = <
@@ -151,9 +177,9 @@ t____			&kp SE_LABK		t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	
 // |       |     |     |      |      |      |        |  |       |      |  _    |  +    |  {   |   }   |  "|"  |
 //                     |      |      |      |        |  |       |      |       |       |
 			bindings = <
-&kp F1			&kp F2			&kp F3			&kp LA(F4)		&kp F5			&kp F6														&kp F7			&kp F8			&kp F9			&kp F10			&kp F11			&kp F12
+&kp F1			&kp F2			&kp F3			&kp F4			&kp F5			&kp F6														&grv_out		&kp F8			&kp F9			&kp F10			&kp F11			&kp F12
 &swapper		t____			t____			t____			t____			t____														&kp PG_UP		&kp HOME		&kp UP			&kp END			t____			t____
-&kp LSHFT		t____			t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		t____			t____
+&kp LSHFT		t____			t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_QUOT		t____
 t____			&kp SE_PIPE		t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp SE_LCBR		&kp SE_LBRC		&kp SE_RBRC		&kp SE_RCBR		t____			&kp PAUSE_BREAK
 												t____			t____			&kp DEL				&sl FN				t____				t____			t____			t____
 			>;
@@ -202,8 +228,8 @@ t____			t____			t____			t____			t____			t____				t____				t____				&rgb_ug RGB_T
 			>;
 
 			sensor-bindings = <
-				&inc_dec_kp PG_UP PG_DN
-				&inc_dec_kp LC(LEFT) LC(RIGHT)
+				&inc_dec_kp C_VOL_DN C_VOL_UP
+				&inc_dec_kp LEFT RIGHT
 			>;
 		};
 
