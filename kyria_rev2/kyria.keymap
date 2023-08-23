@@ -1,0 +1,251 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/rgb.h>
+#include "../swedish-keymap.h"
+
+&left_encoder { resolution = <2>; };
+&right_encoder { resolution = <2>; };
+
+// None/Trans
+#define _____ &none
+#define t____ &trans
+
+// Layers
+#define DEFAULT 0
+#define COLE 1
+#define WORK 2
+#define SVOR 3
+#define GAME 4
+#define SYM 5
+#define NUM 6
+#define CMD 7
+
+/ {
+	macros {
+		 c_a_h: c_a_h {
+			label = "Ctrl_Alt_Home";
+			compatible = "zmk,behavior-macro";
+			#binding-cells = <0>;
+			bindings
+				= <&macro_press &kp LCTRL &kp LALT>
+				, <&macro_tap &kp HOME>
+				, <&macro_release &kp LCTRL &kp LALT>
+				, <&macro_wait_time 100>
+				, <&macro_press &kp LALT>
+				, <&macro_tap &kp TAB>
+				, <&macro_pause_for_release>
+				, <&macro_release &kp LALT>
+				;
+		};
+		grv_out: se_grave_output {
+			label = "Grave_output";
+			compatible = "zmk,behavior-macro";
+			#binding-cells = <0>;
+			bindings
+				= <&macro_tap &kp SE_GRV>
+				, <&macro_tap &kp SPACE>
+				;
+		};
+		tilde_out: se_tilde_output {
+			label = "Tilde_output";
+			compatible = "zmk,behavior-macro";
+			#binding-cells = <0>;
+			bindings
+				= <&macro_tap &kp SE_TILD>
+				, <&macro_tap &kp SPACE>
+				;
+		};
+		hat_out: se_hat_output {
+			label = "Hat_output";
+			compatible = "zmk,behavior-macro";
+			#binding-cells = <0>;
+			bindings
+				= <&macro_tap &kp SE_HAT>
+				, <&macro_tap &kp SPACE>
+				;
+		};
+	};
+	
+	behaviors {
+		td_ao: tap_dance_ao {
+			compatible = "zmk,behavior-tap-dance";
+			label = "tap_dance_ao";
+			#binding-cells = <0>;
+			tapping-term-ms = <200>;
+			bindings = <&kp SE_AE>, <&kp SE_AO>, <&kp SE_AO>;
+		};
+		qlt: quick_layer_tap {
+			compatible = "zmk,behavior-hold-tap";
+			label = "QUICK_LAYER_TAP";
+			#binding-cells = <2>;
+			flavor = "hold-preferred";
+			tapping-term-ms = <125>;
+			bindings = <&mo>, <&kp>;
+		};
+	};
+
+	keymap {
+		compatible = "zmk,keymap";
+
+		default_layer {
+			label = " ";
+// ------------------------------------------------------------------------------------------------------------------------------------------
+// |  ESC  |   Q   |   W   |   E   |   R   |   T   |                                        |   Y   |   U   |   I   |   O   |   P   |  MUTE |
+// |TAB/LSH|   A   |   S   |   D   |   F   |   G   |                                        |   H   |   J   |   K   |   L   |   Ö   |  Ä/Å  |
+// |  CTRL |   Z   |   X   |   C   |   V   |   B   | SHIFT | SYM/  |        |  RET  | SHIFT/|   N   |   M   |   ,   |   .   |   -   |  CTRL |
+//                         |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  MENU |
+
+			bindings = <
+&lt CMD ESC &kp Q		&kp W		&kp E		&kp R		&kp T																&kp Y		&kp U		&kp I		&kp O		&kp P		&kp C_MUTE
+&mt LSHFT TAB&kp A		&kp S		&kp D		&kp F		&kp G																&kp H		&kp J		&kp K		&kp L		&kp SE_OE	&td_ao
+&kp LCTRL	&kp Z		&kp X		&kp C		&kp V		&kp B		&kp LSHFT		_____           _____		_____		&kp N		&kp M		&kp COMMA	&kp DOT		&kp SE_MINS &kp RCTRL
+									&tog SYM	&kp LALT	&mo NUM		&kp BSPC&qlt SYM SPACE			&kp RET&mt RSHIFT SPACE	&lt SYM DEL	&kp LGUI	&kp K_CMENU
+			>;
+
+			sensor-bindings = <
+				&inc_dec_kp PG_UP PG_DN
+				&inc_dec_kp C_VOL_DN C_VOL_UP
+			>;
+		};
+
+		colemak_layer {
+			bindings = <
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t____		t____		t____		t____		t____
+									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
+			>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp t____ t____
+			>;
+		};
+
+		workman_layer {
+			bindings = <
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t____		t____		t____		t____		t____
+									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
+			>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp t____ t____
+			>;
+		};
+
+		svorak_layer {
+			bindings = <
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t____		t____		t____		t____		t____
+									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
+			>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp t____ t____
+			>;
+		};
+
+		game_layer {
+			label = "Game";
+// ------------------------------------------------------------------------------------------------------------------------------------------
+// |  ESC  |   T   |   Q   |   C   |   E   |   R   |                                        |       |       |   UP  |       |       |  MUTE |
+// | LSHIFT|   G   |   A   |   W   |   D   |   F   |                                        |       | RIGHT |  DOWN |  LEFT |       |       |
+// |  CTRL |   Z   |   X   |   S   |   V   |   B   |       | SPACE |        |  RET  |       |       |       |       |       |       |  BACK |
+//                         |       |  RET  |  NUM  |  TAB  | SPACE |        |  RET  |       |       |       |       |
+			bindings = <
+&kp ESC		&kp T		&kp Q		&kp C		&kp E		&kp R																_____		_____		&kp UP		_____		_____		&kp C_MUTE
+&kp LSHFT	&kp G		&kp A		&kp W		&kp D		&kp F																_____		&kp LEFT	&kp DOWN	&kp RIGHT	_____		_____
+&kp LCTRL	&kp Z		&kp X		&kp S		&kp V		&kp B		_____		&kp SPACE			&kp RET		_____		_____		_____		_____		_____		_____		&to 0
+									_____		&kp RET		&mo NUM		&kp TAB		&kp SPACE			&kp RET		_____		_____		_____		_____
+			>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp C_VOL_DN C_VOL_UP
+			>;
+		};
+
+		sym_layer {
+			label = "Symbol";
+// ------------------------------------------------------------------------------------------------------------------------------------------
+// |  TAB  |   \   |   /   |   "   |   (   |   )   |                                        | PG_UP | HOME  |   UP  |  END  |  INS  |  PLAY |
+// | SHIFT |   @   |   `   |   '   |   {   |   }   |                                        | PG_DN | LEFT  |  DOWN | RIGHT |   *   |   ~   |
+// |  CTRL |   |   |   <   |   >   |   [   |   ]   | SHIFT | SYM/  |        |  RET  | SHIFT/|   =   |   &   |   ?   |   !   |   +   |   ^   |
+//                         |  SYM  |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  MENU |
+
+			bindings = <
+&kp TAB		&kp SE_BSLS	&kp SE_SLSH	&kp SE_DQUO	&kp SE_LPRN	&kp SE_RPRN															&kp PG_UP	&kp HOME	&kp UP		&kp END		&kp	INS		&kp C_PLAY_PAUSE
+&kp LSHIFT	&kp SE_AT	&grv_out	&kp SE_QUOT	&kp SE_LCBR	&kp SE_RCBR															&kp PG_DN	&kp LEFT	&kp DOWN	&kp RIGHT	&kp SE_ASTR &tilde_out
+&kp LCTRL	&kp SE_PIPE	&kp SE_LABK	&kp SE_RABK	&kp SE_LBRC	&kp SE_RBRC	&c_a_h		t____				t____		t____		&kp SE_EQL	&kp SE_AMPR	&kp SE_QUES	&kp SE_EXLM	&kp SE_PLUS	&hat_out
+									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
+				>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp C_PREV C_NEXT
+			>;
+		};
+
+		num_layer {
+			label = "Numbers";
+// ------------------------------------------------------------------------------------------------------------------------------------------
+// |   1   |   2   |   3   |   4   |   5   |   6   |                                        |   7   |   8   |   9   |   0   |   +   |  MUTE |
+// |  F1   |  F2   |  F3   |  F4   |  F5   |  F6   |                                        |  F7   |  F8   |  F9   |  F10  |  F11  |  F12  |
+// |  CTRL |       |       |       |       |       | SHIFT | SYM/  |        |  RET  | SHIFT/|       |       |       |       |       |  CTRL |
+//                         | R-ALT |  ALT  |  NUM  | BSPC  | SPACE |        |  RET  | SPACE |DEL/SYM|  WIN  |  MENU |
+
+			bindings = <
+&kp N1  	&kp N2  	&kp N3  	&kp N4  	&kp N5  	&kp N6																&kp N7  	&kp N8  	&kp N9  	&kp N0  	&kp SE_PLUS t____
+&kp F1  	&kp F2  	&kp F3  	&kp F4  	&kp F5  	&kp F6																&kp F7  	&kp F8  	&kp F9  	&kp F10  	&kp F11 	&kp F12
+t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t____		t____		t____		t____		t____
+									&kp RALT	t____		t____		t____		t____				t____		t____		t____		t____		t____
+				>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp LG(LEFT) LG(RIGHT)
+			>;
+		};
+
+		cmd_layer {
+			label = "Command";
+// ------------------------------------------------------------------------------------------------------------------------------------------
+// |  XXX  |  BT 1 |  BT 2 | BT 3  | BT 4  | BT 5  |                                        |  STD  | SVORAK| COLEM | WORKM |       |       |
+// | BT CLR|       |       |       |       |       |                                        |  GAME |       |       |       |       |       |
+// |  USB  |       |       |       |       |       |EXT PWR|       |        |       |       |       |       |       |       |       |       |
+//                         |       |       |       |  TOG  |       |        |       |       |       |       |       |
+			bindings = <
+t____		&bt BT_SEL 1&bt BT_SEL 2&bt BT_SEL 3&bt BT_SEL 4&bt BT_SEL 5														&to 0		&to SVOR  	&to COLE  	&to WORK  			&rgb_ug RGB_EFF		&rgb_ug RGB_TOG
+&bt BT_CLR	t____		t____		t____		t____		t____																&to GAME	t____		t____		&rgb_ug RGB_SAI		&rgb_ug RGB_HUI		&rgb_ug RGB_BRI
+&out OUT_TOG t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t____		t____		&rgb_ug RGB_SAD		&rgb_ug RGB_HUD		&rgb_ug RGB_BRD
+									&bootloader	t____		t____		&ext_power EP_TOG &ext_power EP_ON			t____		t____		t____		t____		&bootloader
+			>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp LG(LEFT) LG(RIGHT)
+			>;
+		};
+
+		empty_layer {
+			bindings = <
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____																t____		t____		t____		t____		t____		t____
+t____		t____		t____		t____		t____		t____		t____		t____				t____		t____		t____		t____		t____		t____		t____		t____
+									t____		t____		t____		t____		t____				t____		t____		t____		t____		t____
+			>;
+			sensor-bindings = <
+				&inc_dec_kp t____ t____
+				&inc_dec_kp t____ t____
+			>;
+		};
+
+	};
+};

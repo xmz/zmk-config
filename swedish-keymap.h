@@ -95,7 +95,7 @@
  */
 // Row 1
 #define SE_HALF LS(SE_SECT) // ½
-#define SE_EXLM LS(SE_1)    // !
+#define SE_EXLM LS(N1)      // !
 #define SE_DQUO LS(SE_2)    // "
 #define SE_HASH LS(SE_3)    // #
 #define SE_CURR LS(SE_4)    // ¤
@@ -108,7 +108,7 @@
 #define SE_QUES LS(SE_PLUS) // ?
 #define SE_GRV  LS(SE_ACUT) // ` (dead)
 // Row 2
-#define SE_CIRC LS(SE_DIAE) // ^ (dead)
+#define SE_HAT LS(SE_DIAE) // ^ (dead)
 // Row 3
 #define SE_ASTR LS(SE_QUOT) // *
 // Row 4
