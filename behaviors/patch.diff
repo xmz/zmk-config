@@ -1,0 +1,28 @@
+diff --git a/app/CMakeLists.txt b/app/CMakeLists.txt
+index efa34905..2ab0f2f6 100644
+--- a/app/CMakeLists.txt
++++ b/app/CMakeLists.txt
+@@ -51,6 +51,7 @@ if ((NOT CONFIG_ZMK_SPLIT) OR CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+   target_sources(app PRIVATE src/behaviors/behavior_to_layer.c)
+   target_sources(app PRIVATE src/behaviors/behavior_transparent.c)
+   target_sources(app PRIVATE src/behaviors/behavior_none.c)
++  target_sources_ifdef(CONFIG_ZMK_BEHAVIOR_TRI_STATE app PRIVATE src/behaviors/behavior_tri_state.c)
+   target_sources_ifdef(CONFIG_ZMK_BEHAVIOR_SENSOR_ROTATE app PRIVATE src/behaviors/behavior_sensor_rotate.c)
+   target_sources_ifdef(CONFIG_ZMK_BEHAVIOR_SENSOR_ROTATE_VAR app PRIVATE src/behaviors/behavior_sensor_rotate_var.c)
+   target_sources_ifdef(CONFIG_ZMK_BEHAVIOR_SENSOR_ROTATE_COMMON app PRIVATE src/behaviors/behavior_sensor_rotate_common.c)
+diff --git a/app/Kconfig.behaviors b/app/Kconfig.behaviors
+index 9e4a82b0..c618debe 100644
+--- a/app/Kconfig.behaviors
++++ b/app/Kconfig.behaviors
+@@ -6,6 +6,11 @@ config ZMK_BEHAVIOR_KEY_TOGGLE
+     default y
+     depends on DT_HAS_ZMK_BEHAVIOR_KEY_TOGGLE_ENABLED
+ 
++DT_COMPAT_ZMK_BEHAVIOR_TRI_STATE := zmk,behavior-tri-state
++
++config ZMK_BEHAVIOR_TRI_STATE
++    bool
++    default $(dt_compat_enabled,$(DT_COMPAT_ZMK_BEHAVIOR_TRI_STATE))
+ 
+ config ZMK_BEHAVIOR_SENSOR_ROTATE_COMMON
+     bool

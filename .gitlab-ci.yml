@@ -23,11 +23,12 @@ stages:          # List of stages for jobs, and their order of execution
 
 variables:
   BOARD: "kyria_rev2"
+  ZMK_BRANCH: ""
 
 build-job:       # This job runs in the build stage, which runs first.
   image:
 #    name: "zmkfirmware/zmk-build-arm:3.2"
-    name: "zmk-build"
+    name: "$CI_REGISTRY_IMAGE/zmk-build"
     pull_policy: if-not-present
   stage: build
   script:
@@ -44,6 +45,25 @@ build-job:       # This job runs in the build stage, which runs first.
       - "*.uf2"
     when: on_success
     expire_in: 30 days
+
+build_image:
+  variables:
+    ZMK_REPO: "https://github.com/petejohanson/zmk.git"
+    ZMK_BRANCH: "stephen/split-encoder"
+    ZMK_IMAGE_VERSION: "3.2"
+  image: 
+    name: docker:stable-git
+    pull_policy: if-not-present
+  stage: build
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - echo "Some variables= ${ZMK_REPO} ${ZMK_BRANCH} $ZMK_IMAGE_VERSION"
+    - docker build --tag $CI_REGISTRY_IMAGE/zmk-build -f build_image/Dockerfile --build-arg="ZMK_IMAGE_VERSION=${ZMK_IMAGE_VERSION}" --build-arg="ZMK_REPO=${ZMK_REPO}" --build-arg="ZMK_BRANCH=${ZMK_BRANCH}" .
+    - docker push $CI_REGISTRY_IMAGE/zmk-build
+  # only:
+  #   - master
+  when: manual
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
