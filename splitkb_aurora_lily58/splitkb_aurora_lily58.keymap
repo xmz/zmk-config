@@ -14,11 +14,11 @@
 
 &left_encoder {
 	/delete-property/ resolution;
-	steps = <36>;
+	steps = <144>;
 };
 &right_encoder {
 	/delete-property/ resolution;
-	steps = <36>;
+	steps = <144>;
 };
 
 // Use all leds
@@ -40,7 +40,7 @@
 	sensors {
 		compatible = "zmk,keymap-sensors";
 		sensors = <&left_encoder &right_encoder>;
-		triggers-per-rotation = <18>;
+		triggers-per-rotation = <36>;
 	};
 
 	macros {
