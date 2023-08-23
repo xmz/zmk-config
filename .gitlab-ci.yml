@@ -22,10 +22,9 @@ stages:          # List of stages for jobs, and their order of execution
   - deploy
 
 variables:
-  BOARD: "kyria_rev2"
-  ZMK_BRANCH: ""
+  BOARD: "splitkb_aurora_lily58"
 
-build-job:       # This job runs in the build stage, which runs first.
+build-job:
   image:
 #    name: "zmkfirmware/zmk-build-arm:3.2"
     name: "$CI_REGISTRY_IMAGE/zmk-build"
@@ -34,10 +33,12 @@ build-job:       # This job runs in the build stage, which runs first.
   script:
     - echo "Compiling the code..."
     - cd /zmk/app
-    - west build -d .build -b nice_nano_v2 -- -DSHIELD="${BOARD}_right" -DZMK_CONFIG=$CI_PROJECT_DIR/$BOARD
-    - cp .build/zephyr/zmk.uf2 $CI_PROJECT_DIR/zmk_${BOARD}_right.uf2
-    - west build -d .build -b nice_nano_v2 -- -DSHIELD="${BOARD}_left" -DZMK_CONFIG=$CI_PROJECT_DIR/$BOARD
-    - cp .build/zephyr/zmk.uf2 $CI_PROJECT_DIR/zmk_${BOARD}_left.uf2
+    - SHIELD=${BOARD}
+    - if [ -f $CI_PROJECT_DIR/$BOARD/.build_vars ]; then source $CI_PROJECT_DIR/$BOARD/.build_vars; fi
+    - west build -d .build/${BOARD}_right -b nice_nano_v2 -- -DSHIELD="${SHIELD}_right${SHIELDS}" -DZMK_CONFIG=$CI_PROJECT_DIR/$BOARD
+    - cp .build/${BOARD}_right/zephyr/zmk.uf2 $CI_PROJECT_DIR/zmk_${BOARD}_right.uf2
+    - west build -d .build/${BOARD}_left -b nice_nano_v2 -- -DSHIELD="${SHIELD}_left${SHIELDS}" -DZMK_CONFIG=$CI_PROJECT_DIR/$BOARD
+    - cp .build/${BOARD}_left/zephyr/zmk.uf2 $CI_PROJECT_DIR/zmk_${BOARD}_left.uf2
     - echo "Compile complete."
   artifacts:
     untracked: true
