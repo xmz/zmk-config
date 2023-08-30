@@ -1,0 +1,117 @@
+diff --git a/app/include/dt-bindings/zmk/bt.h b/app/include/dt-bindings/zmk/bt.h
+index 8ca10606..bd3abd5c 100644
+--- a/app/include/dt-bindings/zmk/bt.h
++++ b/app/include/dt-bindings/zmk/bt.h
+@@ -9,6 +9,8 @@
+ #define BT_PRV_CMD 2
+ #define BT_SEL_CMD 3
+ // #define BT_FULL_RESET_CMD   4
++#define BT_DISCONNECT_CMD 5
++#define BT_SEL_TMP_CMD 6
+ 
+ /*
+ Note: Some future commands will include additional parameters, so we
+@@ -19,3 +21,5 @@ defines these aliases up front.
+ #define BT_NXT BT_NXT_CMD 0
+ #define BT_PRV BT_PRV_CMD 0
+ #define BT_SEL BT_SEL_CMD
++#define BT_DIS BT_DISCONNECT_CMD
++#define BT_SELT BT_SEL_TMP_CMD
+diff --git a/app/include/zmk/ble.h b/app/include/zmk/ble.h
+index 435fde49..6ab75959 100644
+--- a/app/include/zmk/ble.h
++++ b/app/include/zmk/ble.h
+@@ -24,6 +24,8 @@ int zmk_ble_clear_bonds();
+ int zmk_ble_prof_next();
+ int zmk_ble_prof_prev();
+ int zmk_ble_prof_select(uint8_t index);
++int zmk_ble_prof_disconnect(uint8_t index);
++int zmk_ble_prof_select_temp(uint8_t index);
+ 
+ int zmk_ble_active_profile_index();
+ bt_addr_le_t *zmk_ble_active_profile_addr();
+diff --git a/app/src/behaviors/behavior_bt.c b/app/src/behaviors/behavior_bt.c
+index 6d44b5f5..737e12d5 100644
+--- a/app/src/behaviors/behavior_bt.c
++++ b/app/src/behaviors/behavior_bt.c
+@@ -31,6 +31,10 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
+         return zmk_ble_prof_prev();
+     case BT_SEL_CMD:
+         return zmk_ble_prof_select(binding->param2);
++    case BT_DISCONNECT_CMD:
++        return zmk_ble_prof_disconnect(binding->param2);
++    case BT_SEL_TMP_CMD:
++        return zmk_ble_prof_select_temp(binding->param2);
+     default:
+         LOG_ERR("Unknown BT command: %d", binding->param1);
+     }
+diff --git a/app/src/ble.c b/app/src/ble.c
+index 483bc9d7..185cca77 100644
+--- a/app/src/ble.c
++++ b/app/src/ble.c
+@@ -61,6 +61,7 @@ enum advertising_type {
+ 
+ static struct zmk_ble_profile profiles[ZMK_BLE_PROFILE_COUNT];
+ static uint8_t active_profile;
++static uint8_t disconnect_profile = -1;
+ 
+ #define DEVICE_NAME CONFIG_BT_DEVICE_NAME
+ #define DEVICE_NAME_LEN (sizeof(DEVICE_NAME) - 1)
+@@ -240,6 +241,13 @@ static int ble_save_profile() {
+ #endif
+ }
+ 
++void disconnect_temp_profile() {
++    if (disconnect_profile > -1) {
++        zmk_ble_prof_disconnect(disconnect_profile);
++        disconnect_profile = -1;
++    }
++}
++
+ int zmk_ble_prof_select(uint8_t index) {
+     if (index >= ZMK_BLE_PROFILE_COUNT) {
+         return -ERANGE;
+@@ -255,6 +263,8 @@ int zmk_ble_prof_select(uint8_t index) {
+ 
+     update_advertising();
+ 
++    disconnect_temp_profile();
++
+     raise_profile_changed_event();
+ 
+     return 0;
+@@ -271,6 +281,33 @@ int zmk_ble_prof_prev() {
+                                ZMK_BLE_PROFILE_COUNT);
+ };
+ 
++int zmk_ble_prof_select_temp(uint8_t index) {
++    uint8_t result = zmk_ble_prof_select(index);
++    disconnect_profile = index;
++    return result;
++}
++
++int zmk_ble_prof_disconnect(uint8_t index) {
++    if (index >= ZMK_BLE_PROFILE_COUNT)
++        return -ERANGE;
++
++    bt_addr_le_t *addr = &profiles[index].peer;
++    struct bt_conn *conn;
++    int result;
++
++    if (!bt_addr_le_cmp(addr, BT_ADDR_LE_ANY)) {
++        return -1;
++    } else if ((conn = bt_conn_lookup_addr_le(BT_ID_DEFAULT, addr)) == NULL) {
++        return -1;
++    }
++
++    result = bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
++    LOG_DBG("Disconnected from profile %d: %d", index, result);
++
++    bt_conn_unref(conn);
++    return result;
++}
++
+ bt_addr_le_t *zmk_ble_active_profile_addr() { return &profiles[active_profile].peer; }
+ 
+ char *zmk_ble_active_profile_name() { return profiles[active_profile].name; }
+ 
