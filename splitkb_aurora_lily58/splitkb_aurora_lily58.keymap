@@ -14,11 +14,11 @@
 
 &left_encoder {
 	/delete-property/ resolution;
-	steps = <144>;
+	steps = <72>;
 };
 &right_encoder {
 	/delete-property/ resolution;
-	steps = <144>;
+	steps = <72>;
 };
 
 // Use all leds
@@ -156,10 +156,10 @@
 // |   F7  |  F8 |  F9 |  F10 |  F11 |  F12 |        |  |       |  +   |   -   |   =   |  [   |   ]   |   \   |
 //                     |      |      |      |        |  |       |      |       |       |
 			bindings = <
-&kp LA(F4)		t____			&kp SE_AT		&kp LS(N3)		&kp SE_DLR		&kp F5														&kp F7			&kp F8			&kp F9			&kp F10			&kp F11			&kp SE_BSLS
+&kp LA(F4)		t____			&kp SE_AT		&kp LS(N3)		&kp SE_DLR		&kp F5														&grv_out		&kp LC(F12)		&kp F9			&kp F10			&kp SE_EQL		&kp SE_BSLS
 &swapper		t____	 		t____			t____			t____			t____														&kp PG_UP		&kp HOME		&kp UP			&kp END			&kp SE_QUOT		&tilde_out
-&kp LSHFT		t____	 		t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		&grv_out
-t____			&kp SE_LABK		t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	t____			&kp SE_PIPE		&kp SE_LABK		&kp LS(SE_LABK)	t____			t____
+&kp LSHFT		t____	 		t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		t____
+t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	t____			&kp SE_PIPE		&kp SE_LABK		&kp SE_RABK		t____			t____
 												t____			t____			t____ 				t____				&sl FN				t____			t____	 		t____
 			>;
 			sensor-bindings = <
@@ -177,10 +177,10 @@ t____			&kp SE_LABK		t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	
 // |       |     |     |      |      |      |        |  |       |      |  _    |  +    |  {   |   }   |  "|"  |
 //                     |      |      |      |        |  |       |      |       |       |
 			bindings = <
-&kp F1			&kp F2			&kp F3			&kp F4			&kp F5			&kp F6														&grv_out		&kp F8			&kp F9			&kp F10			&kp F11			&kp F12
+&kp F1			&kp F2			&kp F3			&kp F4			&kp F5			&kp F6														&kp F7			&kp F8			&kp F9			&kp F10			&kp F11			&kp F12
 &swapper		t____			t____			t____			t____			t____														&kp PG_UP		&kp HOME		&kp UP			&kp END			t____			t____
 &kp LSHFT		t____			t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_QUOT		t____
-t____			&kp SE_PIPE		t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp SE_LCBR		&kp SE_LBRC		&kp SE_RBRC		&kp SE_RCBR		t____			&kp PAUSE_BREAK
+t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp SE_LCBR		&kp SE_LBRC		&kp SE_RBRC		&kp SE_RCBR		t____			&kp PAUSE_BREAK
 												t____			t____			&kp DEL				&sl FN				t____				t____			t____			t____
 			>;
 
