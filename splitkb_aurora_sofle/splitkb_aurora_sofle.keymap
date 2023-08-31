@@ -168,20 +168,20 @@
 // |   `   |  !  |  @  |  #   |  $   |  %   |                   |  ^   |  &    |  *    |  (   |   )   |   ~   |
 // |       |     |     |      |      |      |        |  |       |      |  _    |  +    |  {   |   }   |  "|"  |
 //               |     |      |      |      |        |  |       |      |       |       |      |
-            bindings = <
+			bindings = <
 &kp LA(F4)		t____			&kp SE_AT		t____			&kp SE_DLR		&kp F5														&grv_out		&kp LC(F12)		t____			t____			t____			&kp SE_BSLS
 &swapper		t____	 		t____			t____			t____			t____														&kp PG_UP		&kp HOME		&kp UP			&kp END			&kp SE_QUOT		&tilde_out
 &kp LSHFT		t____	 		t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		t____
-t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp SE_EQL		&kp SE_PIPE		&kp SE_LABK		&kp SE_RABK		t____			t____
-								t____           t____			t____			t____ 				t____				&mo FN				t____			&kp K_APP 		t____           t____
-            >;
+t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	t____			&kp SE_EQL		&kp SE_LABK		&kp SE_RABK		&kp SE_PIPE		t____
+								t____			t____			t____			t____ 				t____				&mo FN				t____			&kp K_APP 		t____			t____
+			>;
 
 			sensor-bindings = <
 				&inc_dec_kp LC(LEFT) LC(RIGHT)
 				&inc_dec_kp PG_UP PG_DN
 			>;
-        };
-        
+		};
+
 		cmd_layer {
 			label = "Command";
 // ------------------------------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp S
 &swapper		t____			t____			t____			t____			t____														&kp PG_UP		&kp HOME		&kp UP			&kp END			t____			t____
 &kp LSHFT		t____			t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_QUOT		t____
 t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp SE_LCBR		&kp SE_LBRC		&kp SE_RBRC		&kp SE_RCBR		t____			&kp PAUSE_BREAK
-								t____           t____			t____			&kp DEL				&mo FN				t____				&kp KP_ENTER	t____			t____           t____
+								t____			t____			t____			&kp DEL				&mo FN				t____				&kp KP_ENTER	t____			t____			t____
 			>;
 
 			sensor-bindings = <
@@ -217,7 +217,7 @@ t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp S
 t____			&bt BT_DIS 0	&bt BT_DIS 1	&bt BT_DIS 2	&bt BT_DIS 3	&bt BT_DIS 4												t____			t____			t____			t____			t____			t____
 t____			&to ANDROID		t____			t____			t____			t____														t____			t____			t____			t____			t____			t____
 t____			t____			t____			t____			t____			t____				&bt BT_CLR			&bt BT_CLR			t____			t____			t____			t____			t____			t____
-								t____           t____			t____			t____ 				t____				t____				t____			t____			t____			t____
+								t____			t____			t____			t____ 				t____				t____				t____			t____			t____			t____
 			>;
 
 			sensor-bindings = <
@@ -226,25 +226,25 @@ t____			t____			t____			t____			t____			t____				&bt BT_CLR			&bt BT_CLR			t____
 			>;
 		};
 		empty_layer {
-			label = "Function";
+			label = "Empty";
 // ------------------------------------------------------------------------------------------------------------
 // |   |   |   |   |   |   |                 |   |   |   |   |   |   |
 // |   |   |   |   |   |   |                 |   |   |   |   |   |   |
 // |   |   |   |   |   |   |                 |   |   |   |   |   |   |
 // |   |   |   |   |   |   |      |   |      |   |   |   |   |   |   |
 //         |   |   |   |   |      |   |      |   |   |   |   |
-            bindings = <
+			bindings = <
 t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
 t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
 t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
-t____   		t____			t____			t____			t____			t____				t____			t____					t____			t____			t____	 		t____			t____           t____
-								t____   		t____   		t____   		t____				t____			t____					t____			t____			t____			t____
-            >;
+t____			t____			t____			t____			t____			t____				t____			t____					t____			t____			t____	 		t____			t____			t____
+								t____			t____			t____			t____				t____			t____					t____			t____			t____			t____
+			>;
 
 			sensor-bindings = <
 				&inc_dec_kp PG_UP PG_DN
 				&inc_dec_kp C_VOL_DN C_VOL_UP
 			>;
-        };
-    };
+		};
+	};
 };
