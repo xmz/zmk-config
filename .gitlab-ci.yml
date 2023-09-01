@@ -60,7 +60,7 @@ build_image:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - echo "Some variables= ${ZMK_REPO} ${ZMK_BRANCH} $ZMK_IMAGE_VERSION"
-    - docker build --tag $CI_REGISTRY_IMAGE/zmk-build -f build_image/Dockerfile --build-arg="ZMK_IMAGE_VERSION=${ZMK_IMAGE_VERSION}" --build-arg="ZMK_REPO=${ZMK_REPO}" --build-arg="ZMK_BRANCH=${ZMK_BRANCH}" .
+    - docker build --tag $CI_REGISTRY_IMAGE/zmk-build -f docker_build_image/Dockerfile --build-arg="ZMK_IMAGE_VERSION=${ZMK_IMAGE_VERSION}" --build-arg="ZMK_REPO=${ZMK_REPO}" --build-arg="ZMK_BRANCH=${ZMK_BRANCH}" .
     - docker push $CI_REGISTRY_IMAGE/zmk-build
   # only:
   #   - master
