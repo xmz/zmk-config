@@ -66,7 +66,6 @@
 				= <&macro_param_1to2>
 				, <&bt BT_SEL MACRO_PLACEHOLDER>
 				, <&macro_param_2to1>
-				, <&macro_pause_for_release>
 				, <&to MACRO_PLACEHOLDER>
 				;
 		};
@@ -186,7 +185,7 @@
 t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
 t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
 t____			t____			t____			t____			t____			t____				t____			t____					t____			t____			t____	 		t____			t____			&kp K_MENU
-								t____			&kp C_AC_HOME	&kp C_AL_WWW	t____				t____			t____					t____			&kp C_AC_HOME	&kp K_APP		t____
+								t____			&kp C_AC_HOME	&kp C_AL_WWW	t____				t____			t____					t____			&kp C_AC_HOME	&kp K_APP		&kp K_PWR
 			>;
 
 			sensor-bindings = <
