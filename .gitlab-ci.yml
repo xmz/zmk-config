@@ -49,8 +49,8 @@ build-job:
 
 build_image:
   variables:
-    ZMK_REPO: "https://github.com/petejohanson/zmk.git"
-    ZMK_BRANCH: "stephen/split-encoder"
+    ZMK_REPO: "https://github.com/zmkfirmware/zmk.git"
+    ZMK_BRANCH: "main"
     ZMK_IMAGE_VERSION: "3.2"
   image: 
     name: docker:stable-git
@@ -59,7 +59,6 @@ build_image:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - echo "Some variables= ${ZMK_REPO} ${ZMK_BRANCH} $ZMK_IMAGE_VERSION"
     - docker build --tag $CI_REGISTRY_IMAGE/zmk-build -f docker_build_image/Dockerfile --build-arg="ZMK_IMAGE_VERSION=${ZMK_IMAGE_VERSION}" --build-arg="ZMK_REPO=${ZMK_REPO}" --build-arg="ZMK_BRANCH=${ZMK_BRANCH}" .
     - docker push $CI_REGISTRY_IMAGE/zmk-build
   # only:
