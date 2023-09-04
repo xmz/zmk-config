@@ -17,65 +17,56 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages: # List of stages for jobs, and their order of execution
-  - build
-  - test
-  - deploy
+- build
+#- test
+#- deploy
 
-build-job:
+
+build-firmware:
   image:
-#    name: "zmkfirmware/zmk-build-arm:3.2"
+    #    name: "zmkfirmware/zmk-build-arm:3.2"
     name: "$CI_REGISTRY_IMAGE/zmk-build"
     pull_policy: if-not-present
   stage: build
   variables:
-    BOARD: "splitkb_aurora_sofle"
+    VARIANT: "splitkb_aurora_sofle"
   script:
-    - echo "Compiling the code..."
-    - cd /zmk/app
-    - SHIELD=${BOARD}
-    - if [ -f $CI_PROJECT_DIR/$BOARD/.build_vars ]; then source $CI_PROJECT_DIR/$BOARD/.build_vars; fi
-    - west build -d .build/${BOARD}_right -b nice_nano_v2 -- -DSHIELD="${SHIELD}_right${SHIELDS}" -DZMK_CONFIG=$CI_PROJECT_DIR/$BOARD
-    - cp .build/${BOARD}_right/zephyr/zmk.uf2 $CI_PROJECT_DIR/zmk_${BOARD}_right.uf2
-    - west build -d .build/${BOARD}_left -b nice_nano_v2 -- -DSHIELD="${SHIELD}_left${SHIELDS}" -DZMK_CONFIG=$CI_PROJECT_DIR/$BOARD
-    - cp .build/${BOARD}_left/zephyr/zmk.uf2 $CI_PROJECT_DIR/zmk_${BOARD}_left.uf2
-    - echo "Compile complete."
+  - echo "Compiling the code..."
+  - cd /zmk/
+  - bash ${CI_PROJECT_DIR}/behaviors/install.sh
+  - cd app
+  - |
+    for j in $(yaml2json ${CI_PROJECT_DIR}/boards/${VARIANT}/build.yaml | jq -r '.include[] | @base64')
+    do
+      BOARD=$(echo $j | base64 -d - | jq -r '.board')
+      SHIELDS=$(echo $j | base64 -d - | jq -r '.shield')
+      SHIELD=$(echo ${SHIELDS} | cut -d' ' -f1)
+      west build -d .build/${SHIELD} -b ${BOARD} -- -DSHIELD="${SHIELDS}" -DZMK_CONFIG=${CI_PROJECT_DIR}/boards/${VARIANT}
+      cp -r .build/${SHIELD}/zephyr/zmk.uf2 ${CI_PROJECT_DIR}/${SHIELD}.uf2
+    done
+  - echo "Compile complete."
   artifacts:
     untracked: true
     paths:
-      - "*.uf2"
+    - "*.uf2"
     when: on_success
     expire_in: 30 days
 
-build_image:
+build-docker-image:
   variables:
     ZMK_REPO: "https://github.com/zmkfirmware/zmk.git"
     ZMK_BRANCH: "main"
     ZMK_IMAGE_VERSION: "3.2"
-  image: 
+  image:
     name: docker:stable-git
     pull_policy: if-not-present
   stage: build
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker build --tag $CI_REGISTRY_IMAGE/zmk-build -f docker_build_image/Dockerfile --build-arg="ZMK_IMAGE_VERSION=${ZMK_IMAGE_VERSION}" --build-arg="ZMK_REPO=${ZMK_REPO}" --build-arg="ZMK_BRANCH=${ZMK_BRANCH}" .
-    - docker push $CI_REGISTRY_IMAGE/zmk-build
+  - docker build --tag $CI_REGISTRY_IMAGE/zmk-build -f docker_build_image/Dockerfile --build-arg="ZMK_IMAGE_VERSION=${ZMK_IMAGE_VERSION}" --build-arg="ZMK_REPO=${ZMK_REPO}" --build-arg="ZMK_BRANCH=${ZMK_BRANCH}" .
+  - docker push $CI_REGISTRY_IMAGE/zmk-build
   # only:
   #   - master
   when: manual
-
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
-  script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 60
-    - echo "Code coverage is 90%"
-
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
-  script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
-
 
