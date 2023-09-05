@@ -1,0 +1,137 @@
+name: Build
+
+on:
+  # push:
+  #   paths:
+  #     - "boards/**"
+  pull_request:
+    paths:
+      - "boards/**"
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    name: Fetch Build Keyboards
+    needs: compile-matrix
+    strategy:
+      matrix:
+        include: ${{ fromJSON(needs.compile-matrix.outputs.builds) }}
+    outputs:
+      build_matrix: ${{ env.build_matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install yaml2json
+        run: python3 -m pip install remarshal
+      - name: Fetch Build Matrix
+        run: |
+          echo "build_matrix=$(yaml2json 'boards/${{ matrix.variant }}/build.yaml' | jq -c '. | {include: [.include[] | {board: .board, shield: .shield, variant: "${{ matrix.variant }}"}]}')" >> $GITHUB_ENV
+          yaml2json "boards/${{ matrix.variant }}/build.yaml" | jq '. | {include: [.include[] | {board: .board, shield: .shield, variant: "${{ matrix.variant }}"}]}'
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: zmkfirmware/zmk-build-arm:stable
+    needs: matrix
+    name: Build
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.build_matrix) }}
+    steps:
+      - name: Prepare variables
+        shell: sh -x {0}
+        env:
+          shield: ${{ matrix.shield }}
+        run: |
+          name=$(echo $shield|cut -d' ' -f1)
+          echo "zephyr_version=${ZEPHYR_VERSION}" >> $GITHUB_ENV
+          echo "extra_cmake_args=${shield:+-DSHIELD=\"$shield\"}" >> $GITHUB_ENV
+          echo "display_name=${name:+$name - }${{ matrix.board }}" >> $GITHUB_ENV
+          echo "artifact_name=${name:+$name-}${{ matrix.board }}-zmk" >> $GITHUB_ENV
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache west modules
+        uses: actions/cache@v3.0.11
+        continue-on-error: true
+        env:
+          cache_name: cache-zephyr-${{ env.zephyr_version }}-modules
+        with:
+          path: |
+            modules/
+            tools/
+            zephyr/
+            bootloader/
+            zmk/
+          key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/west.yml', '**/build.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache_name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: West Init
+        run: west init -l "${GITHUB_WORKSPACE}"
+      - name: West Update
+        run: west update
+      - name: West Zephyr export
+        run: west zephyr-export
+      - name: West Build (${{ env.display_name }})
+        shell: sh -x {0}
+        run: |
+          mkdir -p .build/artifacts
+          west build -s ../zmk/app -d .build -b "${{ matrix.board }}" -- -DZMK_CONFIG="$(pwd)/boards/${{ matrix.variant }}" ${{ env.extra_cmake_args }} ${{ matrix.cmake-args }}
+      - name: Rename artifacts
+        shell: sh -x {0}
+        run: |
+          if [ -f .build/zephyr/zmk.uf2 ]
+          then
+            cp .build/zephyr/zmk.uf2 ".build/artifacts/${{ env.artifact_name }}.uf2"
+          elif [ -f .build/zephyr/zmk.${{ inputs.fallback_binary }} ]
+          then
+            cp ".build/zephyr/zmk.${{ inputs.fallback_binary }}" ".build/artifacts/${{ env.artifact_name }}.${{ inputs.fallback_binary }}"
+          fi
+      - name: Archive (${{ env.display_name }})
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.variant }}
+          path: .build/artifacts
+  compile-matrix:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    needs: get-changed-files
+    outputs:
+      builds: ${{ steps.compile-list.outputs.result }}
+    steps:
+      - name: Join build lists
+        uses: actions/github-script@v6
+        id: compile-list
+        with:
+          script: |
+            const boardChanges = `${{ needs.get-changed-files.outputs.board-changes }}` || "[]";
+
+            const combined = [
+              ...JSON.parse(boardChanges),
+            ];
+            const combinedUnique = [...new Map(combined.map(el => [JSON.stringify(el), el])).values()];
+
+            const result = combined.map(item => ({
+              variant: item,
+              args: JSON.stringify({some:"arg"})
+            }));
+            console.log(JSON.stringify(result));
+            return result;
+  get-changed-files:
+    if: ${{ github.event_name != 'schedule' }}
+    runs-on: ubuntu-latest
+    outputs:
+      changed-files: ${{ steps.changed-files.outputs.all }}
+      board-changes: ${{ steps.board-changes.outputs.result }}
+    steps:
+      - uses: Ana06/get-changed-files@v2.0.0
+        id: changed-files
+        with:
+          format: "json"
+      - uses: actions/github-script@v6
+        id: board-changes
+        with:
+          script: |
+            const changedFiles = JSON.parse(`${{ steps.changed-files.outputs.all }}`);
+            const boardChanges = [...new Set(changedFiles.filter(f => f.startsWith('boards')).map(item => item.split('/')[1]))];
+            return boardChanges;

@@ -1,0 +1,13 @@
+manifest:
+  remotes:
+  - name: zmkfirmware
+    url-base: https://github.com/zmkfirmware
+  - name: xmz
+    url-base: https://github.com/xmz
+  projects:
+  - name: zmk
+    remote: xmz
+    revision: my-features
+    import: app/west.yml
+  self:
+    path: config
