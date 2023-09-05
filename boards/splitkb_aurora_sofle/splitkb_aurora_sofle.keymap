@@ -16,11 +16,11 @@
 #define t____ &trans
 
 // Layers
-#define DEFAULT 0
-#define ANDROID 1
-#define SYM 2
-#define CMD 3
-#define FN 4
+#define DEF 0	// Default
+#define AND 1	// Android
+#define SYM 2	// Symbols
+#define CMD 3	// Commands
+#define FN 4 	// Functions 
 
 // nice!view
 &nice_view_spi { cs-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>; };
@@ -57,7 +57,7 @@
 		// 		, <&bt BT_DISI>
 		// 		;
 		// };
-		bt_sel_lay: bt_sel_lay {
+		bt_s_l: bt_s_l {
 			label = "Bt Sel + layer";
 			compatible = "zmk,behavior-macro-two-param";
 			#binding-cells = <2>;
@@ -66,6 +66,7 @@
 				= <&macro_param_1to2>
 				, <&bt BT_SEL MACRO_PLACEHOLDER>
 				, <&macro_param_2to1>
+				, <&macro_pause_for_release>
 				, <&to MACRO_PLACEHOLDER>
 				;
 		};
@@ -185,7 +186,7 @@
 t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
 t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
 t____			t____			t____			t____			t____			t____				t____			t____					t____			t____			t____	 		t____			t____			&kp K_MENU
-								t____			&kp C_AC_HOME	&kp C_AL_WWW	t____				t____			t____					t____			&kp C_AC_HOME	&kp K_APP		&kp K_PWR
+								t____			&kp C_AL_WWW	&kp C_AC_SEARCH	t____				t____			t____					t____			&kp C_AC_HOME	&kp K_APP		&kp K_PWR
 			>;
 
 			sensor-bindings = <
@@ -249,7 +250,7 @@ t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp S
 			bindings = <
 &sys_reset		&bt BT_SEL 0	&bt BT_SEL 1	&bt BT_SEL 2	&bt BT_SEL 3	&bt BT_SEL 4												&out OUT_TOG 	t____			t____			&ext_power EP_OFF &ext_power EP_ON &sys_reset
 t____			&bt BT_DIS 0	&bt BT_DIS 1	&bt BT_DIS 2	&bt BT_DIS 3	&bt BT_DIS 4												t____			t____			t____			t____			t____			t____
-t____			&to ANDROID		t____			&to DEFAULT		&bt_sel_lay 0 DEFAULT &bt_sel_lay 4 ANDROID									t____			t____			t____			t____			t____			t____
+t____			&to AND			&to DEF			&bt_s_l 0 DEF 	&bt_s_l 2 DEF 	&bt_s_l 4 AND												t____			t____			t____			t____			t____			t____
 &c_a_h			t____			t____			t____			t____			t____				&bt BT_CLR			&bt BT_CLR			t____			t____			t____			t____			t____			t____
 								t____			t____			t____			t____ 				t____				t____				t____			t____			t____			t____
 			>;
