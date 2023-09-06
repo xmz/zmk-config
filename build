@@ -1,27 +1,61 @@
 #!/usr/bin/bash
 
-#SHIELD="splitkb_aurora_lily58"
-SHIELD="splitkb_aurora_sofle"
 ARGS="-p"
 
-if [ ! -z $1 ]
+if [ -z $(which yaml2json) ] || [ -z $(which jq) ]
 then
-    SHIELD=$1
+    echo "Installing tools"
+    python3 -m pip install remarshal
+    apt install jq --no-recommends -y
 fi
 
-DIR=boards/${SHIELD}
+changed_board_paths() {
+    if [ ! -z $1 ]
+    then
+        echo "boards/$1"
+    else
+	    { git diff ..master --name-only; git status -s | awk '{print $NF}'; } \
+         | xargs dirname | grep -i 'boards/.*' | sort | uniq
+    fi
+}
+
+changed_boards() {
+    for b in $(changed_board_paths $1)
+    do
+        if [ -f ${b}/build.yaml ]
+        then
+            variant=$(basename $b)
+            yaml2json ${b}/build.yaml | jq -cr ".variant:\"${variant}\" | @base64"
+        fi
+    done
+}
 
 _jq() {
     echo $1 | base64 -d - | jq -r $2
 }
 
-for b in $(yaml2json ${DIR}/build.yaml | jq '.include[] | @base64' -r)
+for i in $(changed_boards $1)
 do
-    BOARD=$(_jq $b '.board')
-    SHIELDS=$(_jq $b '.shield')
-    SHIELD=$(echo ${SHIELDS} | cut -d' ' -f1)
-    west build ${ARGS} -s ../app -d .build/${SHIELD} -b ${BOARD} -- -DSHIELD="${SHIELDS}" -DZMK_CONFIG=$(pwd)/${DIR} && \
-    cp -r .build/${SHIELD}/zephyr/zmk.uf2 ${SHIELD}.uf2
+    json=$(_jq $i '.')
+    VARIANT=$(echo $json | jq -r '.variant')
+    echo "Building ${VARIANT}"
+    for b in $(echo $json | jq '.include[] | @base64' -r)
+    do
+        BOARD=$(_jq $b '.board')
+        SHIELDS=$(_jq $b '.shield')
+        SHIELD=$(echo ${SHIELDS} | cut -d' ' -f1)
+        OUTPUT=$VARIANT
+        if [ ! -z $(echo $SHIELD | grep -iE '_(left|right)$') ]
+        then
+            OUTPUT="${VARIANT}_$(echo ${SHIELD} | rev | cut -d_ -f1 | rev)"
+        fi
+        west build ${ARGS} -s ../app -d .build/${SHIELD} -b ${BOARD} -- -DSHIELD="${SHIELDS}" -DZMK_CONFIG=$(pwd)/boards/${VARIANT}
+        if [ ! $? -eq 0 ]
+        then
+            exit 1
+        fi
+        cp -r .build/${SHIELD}/zephyr/zmk.uf2 ${OUTPUT}.uf2
+    done
 done
 
 #west build -s ../app -d .build/reset -b nice_nano_v2 -- -DSHIELD=settings_reset && cp -r .build/reset/zephyr/zmk.uf2 zmk_settings_reset.uf2

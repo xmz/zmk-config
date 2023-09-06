@@ -29,20 +29,24 @@ build-firmware:
     pull_policy: if-not-present
   stage: build
   variables:
-    VARIANT: "splitkb_aurora_sofle"
+    VARIANT: "sofle_view"
   script:
   - echo "Compiling the code..."
   - cd /zmk/
-  - bash ${CI_PROJECT_DIR}/behaviors/install.sh
   - cd app
   - |
-    for j in $(yaml2json ${CI_PROJECT_DIR}/boards/${VARIANT}/build.yaml | jq -r '.include[] | @base64')
+    for b in $(yaml2json ${CI_PROJECT_DIR}/boards/${VARIANT}/build.yaml | jq -r '.include[] | @base64')
     do
-      BOARD=$(echo $j | base64 -d - | jq -r '.board')
-      SHIELDS=$(echo $j | base64 -d - | jq -r '.shield')
+      BOARD=$(echo $b | base64 -d - | jq -r '.board')
+      SHIELDS=$(echo $b | base64 -d - | jq -r '.shield')
       SHIELD=$(echo ${SHIELDS} | cut -d' ' -f1)
+      OUTPUT=$VARIANT
+      if [ ! -z $(echo $SHIELD | grep -iE '_(left|right)$') ]
+      then
+          OUTPUT="${VARIANT}_$(echo ${SHIELD} | rev | cut -d_ -f1 | rev)"
+      fi
       west build -d .build/${SHIELD} -b ${BOARD} -- -DSHIELD="${SHIELDS}" -DZMK_CONFIG=${CI_PROJECT_DIR}/boards/${VARIANT}
-      cp -r .build/${SHIELD}/zephyr/zmk.uf2 ${CI_PROJECT_DIR}/${SHIELD}.uf2
+      cp -r .build/${SHIELD}/zephyr/zmk.uf2 ${CI_PROJECT_DIR}/${OUTPUT}.uf2
     done
   - echo "Compile complete."
   artifacts:
@@ -54,8 +58,8 @@ build-firmware:
 
 build-docker-image:
   variables:
-    ZMK_REPO: "https://github.com/zmkfirmware/zmk.git"
-    ZMK_BRANCH: "main"
+    ZMK_REPO: "https://github.com/xmz/zmk.git"
+    ZMK_BRANCH: "my-features"
     ZMK_IMAGE_VERSION: "3.2"
   image:
     name: docker:stable-git
