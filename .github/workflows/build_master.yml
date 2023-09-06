@@ -1,4 +1,4 @@
-name: Build
+name: Build master
 
 on:
   push:
@@ -10,20 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     name: Create Keyboard Build Matrix
     outputs:
-      build_matrix: ${{ steps.build-matrix.outputs.result }}
+      build_matrix: ${{ env.build_matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install yaml2json
         run: python3 -m pip install remarshal
       - name: Fetch Build Matrix
-        id: build-matrix
+        id: build_matrix
         run: |
-          for b in $(find boards -iname build.yaml)
+          result=$(for b in $(find boards -iname build.yaml)
           do
             variant=$(dirname $b | cut -d/ -f2)
-            yaml2json $b | jq -cr ".variant=\"${variant}\""
-          done | jq -nc '. |= [inputs]'
+            yaml2json $b | jq -c --arg variant $variant '.include[]|.variant=$variant'
+          done | jq -nc '.include |= [inputs]')
+          echo $result
+          echo "build_matrix=$result" >> $GITHUB_ENV
   build:
     runs-on: ubuntu-latest
     container:
@@ -39,10 +41,16 @@ jobs:
         env:
           shield: ${{ matrix.shield }}
         run: |
+          name=$(echo $shield|cut -d' ' -f1)
+          if [ ! -z $(echo $name | grep -iE '_(left|right)$') ]
+          then
+            echo "artifact_name=${{matrix.variant}}_$(echo ${name} | rev | cut -d_ -f1 | rev)" >> $GITHUB_ENV
+          else
+            echo "artifact_name=${name:+$name-}${{ matrix.board }}-zmk" >> $GITHUB_ENV
+          fi
           echo "zephyr_version=${ZEPHYR_VERSION}" >> $GITHUB_ENV
           echo "extra_cmake_args=${shield:+-DSHIELD=\"$shield\"}" >> $GITHUB_ENV
-          echo "display_name=${{ matrix.var }}" >> $GITHUB_ENV
-          echo "artifact_name=${name:+$name-}${{ matrix.board }}-zmk" >> $GITHUB_ENV
+          echo "display_name=${{ matrix.variant }}" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v3
       - name: Cache west modules
@@ -72,20 +80,17 @@ jobs:
         shell: sh -x {0}
         run: |
           mkdir -p .build/artifacts
-          for b in $(echo '${{ matrix.include }}' | jq -r '.include[] | @base64')
-          do
-            BOARD=$(echo $b | base64 -d - | jq -r '.board')
-            SHIELDS=$(echo $b | base64 -d - | jq -r '.shield')
-            SHIELD=$(echo ${SHIELDS} | cut -d' ' -f1)
-            OUTPUT=$VARIANT
-            if [ ! -z $(echo $SHIELD | grep -iE '_(left|right)$') ]
-            then
-                OUTPUT="${VARIANT}_$(echo ${SHIELD} | rev | cut -d_ -f1 | rev)"
-            fi
-            west build -s ../zmk/app -d .build/${SHIELD} -b ${BOARD} -- -DSHIELD="${SHIELDS}" -DZMK_CONFIG=$(pwd)/boards/${VARIANT} && \
-            cp -r .build/${SHIELD}/zephyr/zmk.uf2 .build/artifacts/${OUTPUT}.uf2
-          done
-          #west build -s ../zmk/app -d .build -b "${{ matrix.board }}" -- -DZMK_CONFIG="$(pwd)/boards/${{ matrix.variant }}" ${{ env.extra_cmake_args }} ${{ matrix.cmake-args }}
+          west build -s ../zmk/app -d .build -b "${{ matrix.board }}" -- -DZMK_CONFIG="$(pwd)/boards/${{ matrix.variant }}" ${{ env.extra_cmake_args }} ${{ matrix.cmake-args }}
+      - name: Rename artifacts
+        shell: sh -x {0}
+        run: |
+          if [ -f .build/zephyr/zmk.uf2 ]
+          then
+            cp .build/zephyr/zmk.uf2 ".build/artifacts/${{ env.artifact_name }}.uf2"
+          elif [ -f .build/zephyr/zmk.${{ inputs.fallback_binary }} ]
+          then
+            cp ".build/zephyr/zmk.${{ inputs.fallback_binary }}" ".build/artifacts/${{ env.artifact_name }}.${{ inputs.fallback_binary }}"
+          fi
       - name: Archive (${{ env.display_name }})
         uses: actions/upload-artifact@v3
         with:
