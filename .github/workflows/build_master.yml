@@ -1,0 +1,93 @@
+name: Build
+
+on:
+  push:
+   branches:
+     - master
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    name: Create Keyboard Build Matrix
+    outputs:
+      build_matrix: ${{ steps.build-matrix.outputs.result }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install yaml2json
+        run: python3 -m pip install remarshal
+      - name: Fetch Build Matrix
+        id: build-matrix
+        run: |
+          for b in $(find boards -iname build.yaml)
+          do
+            variant=$(dirname $b | cut -d/ -f2)
+            yaml2json $b | jq -cr ".variant=\"${variant}\""
+          done | jq -nc '. |= [inputs]'
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: zmkfirmware/zmk-build-arm:stable
+    needs: matrix
+    name: Build
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.build_matrix) }}
+    steps:
+      - name: Prepare variables
+        shell: sh -x {0}
+        env:
+          shield: ${{ matrix.shield }}
+        run: |
+          echo "zephyr_version=${ZEPHYR_VERSION}" >> $GITHUB_ENV
+          echo "extra_cmake_args=${shield:+-DSHIELD=\"$shield\"}" >> $GITHUB_ENV
+          echo "display_name=${{ matrix.var }}" >> $GITHUB_ENV
+          echo "artifact_name=${name:+$name-}${{ matrix.board }}-zmk" >> $GITHUB_ENV
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache west modules
+        uses: actions/cache@v3.0.11
+        continue-on-error: true
+        env:
+          cache_name: cache-zephyr-${{ env.zephyr_version }}-modules
+        with:
+          path: |
+            modules/
+            tools/
+            zephyr/
+            bootloader/
+            zmk/
+          key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/west.yml', '**/build.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache_name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: West Init
+        run: west init -l "${GITHUB_WORKSPACE}"
+      - name: West Update
+        run: west update
+      - name: West Zephyr export
+        run: west zephyr-export
+      - name: West Build (${{ env.display_name }})
+        shell: sh -x {0}
+        run: |
+          mkdir -p .build/artifacts
+          for b in $(echo '${{ matrix.include }}' | jq -r '.include[] | @base64')
+          do
+            BOARD=$(echo $b | base64 -d - | jq -r '.board')
+            SHIELDS=$(echo $b | base64 -d - | jq -r '.shield')
+            SHIELD=$(echo ${SHIELDS} | cut -d' ' -f1)
+            OUTPUT=$VARIANT
+            if [ ! -z $(echo $SHIELD | grep -iE '_(left|right)$') ]
+            then
+                OUTPUT="${VARIANT}_$(echo ${SHIELD} | rev | cut -d_ -f1 | rev)"
+            fi
+            west build -s ../zmk/app -d .build/${SHIELD} -b ${BOARD} -- -DSHIELD="${SHIELDS}" -DZMK_CONFIG=$(pwd)/boards/${VARIANT} && \
+            cp -r .build/${SHIELD}/zephyr/zmk.uf2 .build/artifacts/${OUTPUT}.uf2
+          done
+          #west build -s ../zmk/app -d .build -b "${{ matrix.board }}" -- -DZMK_CONFIG="$(pwd)/boards/${{ matrix.variant }}" ${{ env.extra_cmake_args }} ${{ matrix.cmake-args }}
+      - name: Archive (${{ env.display_name }})
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.variant }}
+          path: .build/artifacts
