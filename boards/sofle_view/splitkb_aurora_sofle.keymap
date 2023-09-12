@@ -71,6 +71,19 @@
 				, <&to MACRO_PLACEHOLDER>
 				;
 		};
+		bt_set: bt_set {
+			label = "Bt SelTemp + layer";
+			compatible = "zmk,behavior-macro-two-param";
+			#binding-cells = <2>;
+			wait-ms = <100>;
+			bindings
+				= <&macro_param_1to2>
+				, <&bt BT_SELT MACRO_PLACEHOLDER>
+				, <&macro_param_2to1>
+				, <&macro_pause_for_release>
+				, <&to MACRO_PLACEHOLDER>
+				;
+		};
 		c_a_h: c_a_h {
 			label = "Ctrl_Alt_Home";
 			compatible = "zmk,behavior-macro";
@@ -271,11 +284,11 @@ t____			t____			t____			t____			t____			t____				t____			t____					t____			t____
 // |       |     |     |      |      |      |        |  |       |      |  _    |  +    |  {   |   }   |  "|"  |
 //               |     |      |      |      |        |  |       |      |       |       |      |
 			bindings = <
-&sys_reset		&bt BT_SEL 0	&bt BT_SEL 1	&bt BT_SEL 2	&bt BT_SEL 3	&bt BT_SEL 4												&out OUT_TOG 	t____			t____			&ext_power EP_OFF &ext_power EP_ON &sys_reset
-t____			&bt BT_DIS 0	&bt BT_DIS 1	&bt BT_DIS 2	&bt BT_DIS 3	&bt BT_DIS 4												t____			t____			t____			t____			t____			t____
-t____			&to AND			&to DEF			&bt_s_l 0 DEF 	&bt_s_l 2 DEF 	&bt_s_l 4 AND												t____			t____			t____			t____			t____			t____
+&sys_reset		&bt BT_SEL 0	&bt BT_SEL 1	&bt BT_SEL 2	&bt BT_SEL 3	&bt BT_SEL 4												&bt BT_SEL 5 	t____			t____			&ext_power EP_OFF &ext_power EP_ON &sys_reset
+t____			&bt BT_DIS 0	&bt BT_DIS 1	&bt BT_DIS 2	&bt BT_DIS 3	&bt BT_DIS 4												&bt BT_DIS 5	t____			t____			t____			t____			t____
+t____			&to AND			&to DEF			&bt_s_l 0 DEF 	&bt_s_l 2 DEF 	&bt_s_l 4 AND												&bt_set 5 AND	t____			t____			t____			t____			t____
 &c_a_h			t____			t____			t____			t____			t____				&bt BT_CLR			&bt BT_CLR			t____			t____			t____			t____			t____			t____
-								t____			t____			t____			t____ 				t____				t____				t____			t____			t____			t____
+								t____			t____			t____			t____ 				t____				t____				t____			t____			t____			&out OUT_TOG
 			>;
 
 			sensor-bindings = <
