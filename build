@@ -25,7 +25,7 @@ changed_boards() {
         if [ -f ${b}/build.yaml ]
         then
             variant=$(basename $b)
-            yaml2json ${b}/build.yaml | jq -cr ".variant:\"${variant}\" | @base64"
+            yaml2json ${b}/build.yaml | jq -cr ".variant = \"${variant}\" | @base64"
         fi
     done
 }
