@@ -22,7 +22,7 @@
 };
 
 // Use all leds
-&spi3 { led_strip: ws2812@0 { chain-length = <34>; }; };
+// &spi3 { led_strip: ws2812@0 { chain-length = <34>; }; };
 
 // None/Trans
 #define _____ &none
@@ -94,6 +94,7 @@
 			label = "QUICK_LAYER_TAP";
 			#binding-cells = <2>;
 			flavor = "hold-preferred";
+			quick-tap-ms = <200>;
 			tapping-term-ms = <125>;
 			bindings = <&mo>, <&kp>;
 		};
@@ -206,7 +207,7 @@ t____			t____			t____			t____			t____			t____				t____				t____				&rgb_ug RGB_T
 												t____			t____			t____ 				t____				t____				t____			&rgb_ug RGB_BRI	&rgb_ug RGB_BRD
 			>;
 			sensor-bindings = <
-				&inc_dec_kp PG_UP PG_DN
+				&inc_dec_kp RGB_BRI RGB_BRD
 				&inc_dec_kp C_VOL_DN C_VOL_UP
 			>;
 		};
