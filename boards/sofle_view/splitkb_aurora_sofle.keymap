@@ -27,11 +27,9 @@
 &nice_view_spi { cs-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>; };
 
 &left_encoder {
-	/delete-property/ resolution;
 	steps = <72>;
 };
 &right_encoder {
-	/delete-property/ resolution;
 	steps = <72>;
 };
 
@@ -113,6 +111,7 @@
 				, <&macro_tap &kp SPACE>
 				;
 		};
+	};
 
 	behaviors {
 		qlt: quick_layer_tap {
@@ -205,7 +204,7 @@ t____			t____			t____			t____			t____			t____				t____				t____				t____			t____
 // |       |     |     |      |      |      |        |  |       |      |  _    |  +    |  {   |   }   |  "|"  |
 //               |     |      |      |      |        |  |       |      |       |       |      |
 			bindings = <
-&kp LA(F4)		t____			&kp SE_AT		t____			&kp SE_DLR		&kp F5															&grv_out		&kp LC(F12)		t____			t____			t____			&kp SE_BSLS
+&kp LA(F4)		&kp F2			&kp SE_AT		t____			&kp SE_DLR		&kp F5															&grv_out		&kp LC(F12)		t____			t____			t____			&kp SE_BSLS
 &swapper		t____	 		t____			t____			t____			t____															&kp PG_UP		&kp HOME		&kp UP			&kp END			&kp SE_QUOT		&tilde_out
 &kp LSHFT		t____	 		t____			t____			t____			t____															&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		t____
 t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE		t____			&kp SE_EQL		&kp SE_LABK		&kp SE_RABK		&kp SE_PIPE		t____
@@ -272,7 +271,7 @@ t____			t____			t____			t____			t____			t____				t____			t____					t____			t____
 //               |     |      |      |      |        |  |       |      |       |       |      |
 			bindings = <
 &sys_reset		&bt BT_SEL 0	&bt BT_SEL 1	&bt BT_SEL 2	&bt BT_SEL 3	&bt BT_SEL 4												&out OUT_TOG 	t____			t____			&ext_power EP_OFF &ext_power EP_ON &sys_reset
-t____			&bt BT_DIS 0	&bt BT_DIS 1	&bt BT_DIS 2	&bt BT_DIS 3	&bt BT_DIS 4												t____			t____			t____			t____			t____			t____
+t____			&bt BT_DISC 0	&bt BT_DISC 1	&bt BT_DISC 2	&bt BT_DISC 3	&bt BT_DISC 4												t____			t____			t____			t____			t____			t____
 t____			&to AND			&to DEF			&bt_s_l 0 DEF 	&bt_s_l 2 DEF 	&bt_s_l 4 AND												t____			t____			t____			t____			t____			t____
 &c_a_h			t____			t____			t____			t____			t____				&bt BT_CLR			&bt BT_CLR			t____			t____			t____			t____			t____			t____
 								t____			t____			t____			t____ 				t____				t____				t____			t____			t____			t____
