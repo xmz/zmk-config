@@ -61,9 +61,12 @@ build-docker-image:
     ZMK_REPO: "https://github.com/xmz/zmk.git"
     ZMK_BRANCH: "my-features"
     ZMK_IMAGE_VERSION: "3.2"
+    DOCKER_TLS_CERTDIR: "/certs"
   image:
     name: docker:stable-git
     pull_policy: if-not-present
+  services:
+    - docker:dind
   stage: build
   before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
