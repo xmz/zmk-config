@@ -28,8 +28,11 @@ build-firmware:
     name: "$CI_REGISTRY_IMAGE/zmk-build"
     pull_policy: if-not-present
   stage: build
-  variables:
-    VARIANT: "sofle_view"
+  parallel:
+    matrix:
+    - VARIANT:
+      - sofle_view
+      - lily58
   script:
   - echo "Compiling the code..."
   - cd /zmk/
