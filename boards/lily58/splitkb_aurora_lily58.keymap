@@ -12,15 +12,6 @@
 #include <dt-bindings/zmk/rgb.h>
 #include "../swedish-keymap.h"
 
-&left_encoder {
-	/delete-property/ resolution;
-	steps = <72>;
-};
-&right_encoder {
-	/delete-property/ resolution;
-	steps = <72>;
-};
-
 // Use all leds
 // &spi3 { led_strip: ws2812@0 { chain-length = <34>; }; };
 
@@ -29,11 +20,19 @@
 #define t____ &trans
 
 // Layers
-#define DEFAULT 0
-#define SYM 1
-#define CMD 2
-#define FN 3
-#define ANDROID 4
+#define DEF 0		// Default
+#define AND 1		// Android
+#define SYM 2		// Symbols
+#define CMD 3		// Commands
+#define AND_CMD 4	// Android functions
+#define FN 5 		// Functions 
+
+&left_encoder {
+	steps = <72>;
+};
+&right_encoder {
+	steps = <72>;
+};
 
 / {
 
@@ -44,8 +43,19 @@
 	};
 
 	macros {
+		bt_s_l: bt_s_l {
+			compatible = "zmk,behavior-macro-two-param";
+			#binding-cells = <2>;
+			wait-ms = <100>;
+			bindings
+				= <&macro_param_1to2>
+				, <&bt BT_SEL MACRO_PLACEHOLDER>
+				, <&macro_param_2to1>
+				, <&macro_pause_for_release>
+				, <&to MACRO_PLACEHOLDER>
+				;
+		};
 		 c_a_h: c_a_h {
-			label = "Ctrl_Alt_Home";
 			compatible = "zmk,behavior-macro";
 			#binding-cells = <0>;
 			wait-ms = <50>;
@@ -60,7 +70,6 @@
 				;
 		};
 		grv_out: se_grave_output {
-			label = "Grave_output";
 			compatible = "zmk,behavior-macro";
 			#binding-cells = <0>;
 			bindings
@@ -69,7 +78,6 @@
 				;
 		};
 		tilde_out: se_tilde_output {
-			label = "Tilde_output";
 			compatible = "zmk,behavior-macro";
 			#binding-cells = <0>;
 			bindings
@@ -78,7 +86,6 @@
 				;
 		};
 		hat_out: se_hat_output {
-			label = "Hat_output";
 			compatible = "zmk,behavior-macro";
 			#binding-cells = <0>;
 			bindings
@@ -91,7 +98,6 @@
 	behaviors {
 		qlt: quick_layer_tap {
 			compatible = "zmk,behavior-hold-tap";
-			label = "QUICK_LAYER_TAP";
 			#binding-cells = <2>;
 			flavor = "hold-preferred";
 			quick-tap-ms = <200>;
@@ -102,24 +108,9 @@
 		// Swapper for smart alt+tab
 		swapper: swapper {
 			compatible = "zmk,behavior-tri-state";
-			label = "SWAPPER";
 			#binding-cells = <0>;
 			bindings = <&kt LALT>, <&kp TAB>, <&kt LALT>;
 			ignored-key-positions = <12 24>;
-		};
-
-		rot_kp: behavior_sensor_rotate_kp {
-			compatible = "zmk,behavior-sensor-rotate-var";
-			label = "ENC_KP";
-			#sensor-binding-cells = <2>;
-			bindings = <&kp>, <&kp>;
-		};
-
-		vol_encoder: vol_encoder {
-			compatible = "zmk,behavior-sensor-rotate";
-			label = "VOL_ENCODER";
-			#sensor-binding-cells = <0>;
-			bindings = <&kp C_VOL_DN>, <&kp C_VOL_UP>;
 		};
 	};
 
@@ -127,7 +118,7 @@
 		compatible = "zmk,keymap";
 
 		default_layer {
-			label = " ";
+			display-name = " ";
 // ------------------------------------------------------------------------------------------------------------
 // |  ESC  |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |   +   |
 // |  TAB  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   |   Å   |
@@ -135,10 +126,10 @@
 // |  CTRL |  Z  |  X  |  C   |  V   |  B   |   MUTE |  | MUTE  |  N   |  M    |  ,    |  .   |   -   | SHIFT |
 //                     | ALT  | GUI  | BSPC |  SPACE |  | ENTER | DEL  | BSPC  | RALT  |
 			bindings = <
-&kp ESC			&kp N1	 		&kp N2			&kp N3			&kp N4			&kp N5														&kp N6			&kp N7			&kp N8			&kp N9			&kp N0			&kp SE_PLUS
+&kp ESC	 		&kp N1	 		&kp N2			&kp N3			&kp N4			&kp N5														&kp N6			&kp N7			&kp N8			&kp N9			&kp N0			&kp SE_PLUS
 &kp TAB			&kp Q			&kp W			&kp E			&kp R			&kp T														&kp Y			&kp U			&kp I			&kp O			&kp P			&kp SE_AO
 &kp LSHFT		&kp A			&kp S			&kp D			&kp F			&kp G														&kp H			&kp J			&kp K			&kp L			&kp SE_OE		&kp SE_AE
-&kp LCTRL		&kp Z			&kp X			&kp C			&kp V			&kp B				&kp C_MUTE			&kp C_MUTE			&kp N			&kp M			&kp COMMA		&kp DOT			&kp SE_MINS 	&kp RSHFT
+&kp LCTRL		&kp Z			&kp X			&kp C			&kp V			&kp B				&kp C_MUTE			&kp C_PLAY_PAUSE	&kp N			&kp M			&kp COMMA		&kp DOT			&kp SE_MINS 	&kp RSHFT
 												&kp LALT		&kp LGUI		&kp BSPC			&qlt SYM SPACE		&qlt CMD RET		&kp DEL			&kp DEL			&kp RALT
 			>;
 
@@ -147,9 +138,31 @@
 				&inc_dec_kp LC(LEFT) LC(RIGHT)
 			>;
 		};
+		
+		android_layer {
+			display-name = "Android";
+// ------------------------------------------------------------------------------------------------------------
+// |  ESC  |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |   +   |
+// |  TAB  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   |   Å   |
+// | SHIFT |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   Ö   |   Ä   |
+// |  CTRL |  Z  |  X  |  C   |  V   |  B   |   "["  |  |  "]"  |  N   |  M    |  ,    |  .   |   -   | SHIFT |
+//                     | ALT  | GUI  | LOWER|  SPACE |  | ENTER | RAISE| BSPC  | GUI   |
+			bindings = <
+&kp K_BACK		t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
+t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
+t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
+t____			t____			t____			t____			t____			t____				t____				t____				t____			t____			t____	 		t____			t____			&kp K_MENU
+												t____			&kp C_AL_WWW	&kp C_AC_SEARCH		t____				&qlt AND_CMD RET 	&kp C_AC_HOME	&kp K_APP		&kp K_PWR
+			>;
+
+			sensor-bindings = <
+				&inc_dec_kp C_VOL_DN C_VOL_UP
+				&inc_dec_kp LEFT RIGHT
+			>;
+		};
 
 		sym_layer {
-			label = "Symbol";
+			display-name = "Symbol";
 // ------------------------------------------------------------------------------------------------------------
 // |       |     |     |      |      |      |                   |      |       |       |      |       |       |
 // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |   7   |   8   |  9   |   0   |       |
@@ -157,10 +170,10 @@
 // |   F7  |  F8 |  F9 |  F10 |  F11 |  F12 |        |  |       |  +   |   -   |   =   |  [   |   ]   |   \   |
 //                     |      |      |      |        |  |       |      |       |       |
 			bindings = <
-&kp LA(F4)		t____			&kp SE_AT		&kp LS(N3)		&kp SE_DLR		&kp F5														&grv_out		&kp LC(F12)		&kp F9			&kp F10			&kp SE_EQL		&kp SE_BSLS
+&kp LA(F4)		&kp F2			&kp SE_AT		t____			&kp SE_DLR		&kp F5														&grv_out		&kp LC(F12)		t____			t____			t____			&kp SE_BSLS
 &swapper		t____	 		t____			t____			t____			t____														&kp PG_UP		&kp HOME		&kp UP			&kp END			&kp SE_QUOT		&tilde_out
-&kp LSHFT		t____	 		t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		t____
-t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	t____			&kp SE_PIPE		&kp SE_LABK		&kp SE_RABK		t____			t____
+&kp LSHFT		t____	 		t____			t____			t____			t____														&kp PG_DN		&kp LEFT		&kp DOWN		&kp RIGHT		&kp SE_ASTR		&hat_out
+t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	t____			&kp SE_EQL		&kp SE_LABK		&kp SE_RABK		&kp SE_PIPE		t____
 												t____			t____			t____ 				t____				&sl FN				t____			t____	 		t____
 			>;
 			sensor-bindings = <
@@ -170,7 +183,7 @@ t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	t____
 		};
 
 		cmd_layer {
-			label = "Command";
+			display-name = "Command";
 // ------------------------------------------------------------------------------------------------------------
 // | BTCLR | BT1 | BT2 |  BT3 |  BT4 |  BT5 |                   |      |       |       |      |       |       |
 // |  F1   |  F2 |  F3 |  F4  |  F5  |  F6  |                   |  F7  |  F8   |  F9   |  F10 |  F11  |  F12  |
@@ -187,12 +200,33 @@ t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp S
 
 			sensor-bindings = <
 				&inc_dec_kp PG_UP PG_DN
+				&inc_dec_kp LEFT RIGHT
+			>;
+		};
+		
+		android_cmd_layer {
+			display-name = "DroidCmd";
+// ------------------------------------------------------------------------------------------------------------
+// |       |     |     |      |      |      |                   |      |       |       |      |       |       |
+// |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |   7   |   8   |  9   |   0   |       |
+// |   F1  |  F2 |  F3 |  F4  |  F5  |  F6  |                   |      |   <-  |   v   |  ^   |  ->   |       |
+// |   F7  |  F8 |  F9 |  F10 |  F11 |  F12 |        |  |       |  +   |   -   |   =   |  [   |   ]   |   \   |
+//                     |      |      |      |        |  |       |      |       |       |
+			bindings = <
+t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
+t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
+t____			t____	 		t____			t____			t____			t____														t____			t____			t____	 		t____			t____			t____
+t____			t____	 		t____			t____			t____			t____				t____				t____				t____			t____			t____	 		t____			t____			t____
+												t____			t____			t____ 				t____				t____				t____			t____			t____
+			>;
+			sensor-bindings = <
+				&inc_dec_kp C_RW C_FF
 				&inc_dec_kp C_VOL_DN C_VOL_UP
 			>;
 		};
 
 		fn_layer {
-			label = "Function";
+			display-name = "Function";
 // ------------------------------------------------------------------------------------------------------------
 // |       |     |     |      |      |      |                   |      |       |       |      |       |       |
 // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |   7   |   8   |  9   |   0   |       |
@@ -201,33 +235,11 @@ t____			t____			t____			t____			t____			t____				t____				&kp C_PLAY_PAUSE	&kp S
 //                     |      |      |      |        |  |       |      |       |       |
 			bindings = <
 &sys_reset		&bt BT_SEL 0	&bt BT_SEL 1	&bt BT_SEL 2	&bt BT_SEL 3	&bt BT_SEL 4												&out OUT_TOG 	t____			t____			&ext_power EP_OFF &ext_power EP_ON &sys_reset
-&bt BT_CLR		t____			t____			t____			t____			t____														t____			t____			t____			t____			t____			t____
-t____			&to ANDROID		t____			t____			t____			t____														t____			t____			t____			t____			t____			t____
-t____			t____			t____			t____			t____			t____				t____				t____				&rgb_ug RGB_TOG	&rgb_ug RGB_HUI &rgb_ug RGB_HUD	&rgb_ug RGB_SAI &rgb_ug RGB_SAD &rgb_ug RGB_COLOR_HSB(0, 0, 2)
+t____			&bt BT_DISC 0	&bt BT_DISC 1	&bt BT_DISC 2	&bt BT_DISC 3	&bt BT_DISC 4												t____			t____			t____			t____			t____			t____
+t____			&to AND			&to DEF			&bt_s_l 0 DEF 	&bt_s_l 2 DEF 	&bt_s_l 4 AND												t____			t____			t____			t____			t____			t____
+&c_a_h			t____			t____			t____			t____			t____				&bt BT_CLR			&bt BT_CLR			&rgb_ug RGB_TOG	&rgb_ug RGB_HUI &rgb_ug RGB_HUD	&rgb_ug RGB_SAI &rgb_ug RGB_SAD &rgb_ug RGB_COLOR_HSB(0, 0, 2)
 												t____			t____			t____ 				t____				t____				t____			&rgb_ug RGB_BRI	&rgb_ug RGB_BRD
 			>;
-			sensor-bindings = <
-				&inc_dec_kp RGB_BRI RGB_BRD
-				&inc_dec_kp C_VOL_DN C_VOL_UP
-			>;
-		};
-		
-		android_layer {
-			label = "Android";
-// ------------------------------------------------------------------------------------------------------------
-// |  ESC  |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |   +   |
-// |  TAB  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   |   Å   |
-// | SHIFT |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   Ö   |   Ä   |
-// |  CTRL |  Z  |  X  |  C   |  V   |  B   |   "["  |  |  "]"  |  N   |  M    |  ,    |  .   |   -   | SHIFT |
-//                     | ALT  | GUI  | LOWER|  SPACE |  | ENTER | RAISE| BSPC  | GUI   |
-			bindings = <
-&kp K_BACK		&kp N1	 		&kp N2			&kp N3			&kp N4			&kp N5														&kp N6			&kp N7			&kp N8			&kp N9			&kp N0			&kp SE_PLUS
-&kp TAB			&kp Q			&kp W			&kp E			&kp R			&kp T														&kp Y			&kp U			&kp I			&kp O			&kp P			&kp SE_AO
-&kp LSHFT		&kp A			&kp S			&kp D			&kp F			&kp G														&kp H			&kp J			&kp K			&kp L			&kp SE_OE		&kp SE_AE
-&kp LCTRL		&kp Z			&kp X			&kp C			&kp V			&kp B				&to DEFAULT			&kp C_MUTE			&kp N			&kp M			&kp COMMA		&kp DOT			&kp SE_MINS 	&kp K_MENU
-												&kp LALT		&kp LGUI		&kp BSPC			&qlt SYM SPACE		&qlt CMD RET		&kp BSPC		&kp C_AC_HOME	&kp K_APP
-			>;
-
 			sensor-bindings = <
 				&inc_dec_kp C_VOL_DN C_VOL_UP
 				&inc_dec_kp LEFT RIGHT
@@ -235,6 +247,7 @@ t____			t____			t____			t____			t____			t____				t____				t____				&rgb_ug RGB_T
 		};
 
 		empty_layer {
+			display-name = " ";
 // ------------------------------------------------------------------------------------------------------------
 // |       |     |     |      |      |      |                   |      |       |       |      |       |       |
 // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |   7   |   8   |  9   |   0   |       |
