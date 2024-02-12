@@ -63,7 +63,7 @@ build-docker-image:
   variables:
     ZMK_REPO: "https://github.com/xmz/zmk.git"
     ZMK_BRANCH: "my-features"
-    ZMK_IMAGE_VERSION: "3.2"
+    ZMK_IMAGE_VERSION: "3.5"
     DOCKER_TLS_CERTDIR: "/certs"
   image:
     name: docker:stable-git
