@@ -1,4 +1,4 @@
-ARG ZMK_IMAGE_VERSION=3.2
+ARG ZMK_IMAGE_VERSION=3.5
 FROM zmkfirmware/zmk-build-arm:${ZMK_IMAGE_VERSION} as BASE
 ARG ZMK_BRANCH=main
 ARG ZMK_REPO=https://github.com/zmkfirmware/zmk.git
